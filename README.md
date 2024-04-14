@@ -1,2 +1,2 @@
 # 2024-unsdg-project
-GNEC Hackathon 2024 Submission
+GNEC Hackathon 2024 Submission.
