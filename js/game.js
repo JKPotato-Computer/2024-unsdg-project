@@ -17,16 +17,17 @@ const game = (function() {
 	}
 	
 	const createStreetGrid = function(size) {
-		function findUniqueStreets(size,sides) {
-			if (!sides) {
-				sides = 0;
+		streetPropertyData = {};
+		for (let x = 0;x <= size;x+=0.5) {
+			streetPropertyData[x] = {};
+			for (let y = 0.5;y <= size;(x % 2 == 0) ? (y++) : (y+=0.5)) {
+				streetPropertyData[x][y] = {};
+				streetPropertyData[x][y].surfaceType = "";  // road, light rail, interstate, etc.
+				streetPropertyData[x][y].upgrades = {}; // bus stop, bike lane, BRT, etc.
 			}
-			
-			console.log((4*(size ** 2)));
-			return (size == 1) ? (sides) : (((4*(size ** 2))) - findUniqueStreets(size - 1,sides + (4 * (size - 1))));
 		}
 		
-		console.log(findUniqueStreets(size));
+		console.log(streetPropertyData);
 	}
 	
 	return {

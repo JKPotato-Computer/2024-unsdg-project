@@ -1,3 +1,52 @@
 /* 
 global.css - Webpage Global Configs
 */
+/* https://www.realtimecolors.com/?colors=162831-f5fbff-02558d-901838-3dff74&fonts=Roboto-Roboto */
+@import url('https://fonts.googleapis.com/css?family=Roboto:700|Roboto:400');
+
+:root[data-theme="light"] {
+  --text: #162831;
+  --background: #f5fbff;
+  --primary: #02558d;
+  --secondary: #901838;
+  --accent: #3dff74;
+  --linearPrimarySecondary: linear-gradient(#02558d, #901838);
+  --linearPrimaryAccent: linear-gradient(#02558d, #3dff74);
+  --linearSecondaryAccent: linear-gradient(#901838, #3dff74);
+ --radialPrimarySecondary: radial-gradient(#02558d, #901838);
+  --radialPrimaryAccent: radial-gradient(#02558d, #3dff74);
+  --radialSecondaryAccent: radial-gradient(#901838, #3dff74);
+}
+
+:root[data-theme="dark"] {
+  --text: #cee0e9;
+  --background: #00060a;
+  --primary: #72c5fd;
+  --secondary: #e76f8f;
+  --accent: #00c237;
+  --linearPrimarySecondary: linear-gradient(#72c5fd, #e76f8f);
+  --linearPrimaryAccent: linear-gradient(#72c5fd, #00c237);
+  --linearSecondaryAccent: linear-gradient(#e76f8f, #00c237);
+  --radialPrimarySecondary: radial-gradient(#72c5fd, #e76f8f);
+  --radialPrimaryAccent: radial-gradient(#72c5fd, #00c237);
+  --radialSecondaryAccent: radial-gradient(#e76f8f, #00c237);
+}
+
+body {
+  font-family: 'Roboto';
+  font-weight: 400;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Roboto';
+  font-weight: 700;
+}
+
+html {font-size: 100%;} /* 16px */
+h1 {font-size: 3.053rem; /* 48.8px */}
+h2 {font-size: 2.442rem; /* 39.04px */}
+h3 {font-size: 1.954rem; /* 31.2px */}
+h4 {font-size: 1.563rem; /* 24.96px */}
+h5 {font-size: 1.250rem; /* 20px */}
+small {font-size: 0.800rem; /* 12.8px */}
