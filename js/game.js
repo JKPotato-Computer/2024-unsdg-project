@@ -1,33 +1,35 @@
 const game = (function() {
-	let gamePropertyData = [];
-	let streetPropertyData = [];
+	let gameData = {
+		districtPropertyData : [],
+		streetPropertyData : []
+	};
 	
 	const createPropertyGrid = function(size) {
-		gamePropertyData = new Array(size);
+		gameData.districtPropertyData = new Array(size);
 		for (let x = 0;x < size;x++) {
-			gamePropertyData[x] = new Array(size);
+			gameData.districtPropertyData[x] = new Array(size);
 			for (let y = 0;y < size;y++) {
-				gamePropertyData[x][y] = {};
-				gamePropertyData[x][y].propertyType = ""; // type of property (ex: factory, neighborhood)
-				gamePropertyData[x][y].groupName = ""; // collection of similar groups (if any)
+				gameData.districtPropertyData[x][y] = {};
+				gameData.districtPropertyData[x][y].propertyType = ""; // type of property (ex: factory, neighborhood)
+				gameData.districtPropertyData[x][y].groupName = ""; // collection of similar groups (if any)
 			}
 		}
 		
-		console.log(gamePropertyData);
+		console.log(gameData.districtPropertyData);
 	}
 	
 	const createStreetGrid = function(size) {
-		streetPropertyData = {};
+		gameData.streetPropertyData = {};
 		for (let x = 0;x <= size;x+=0.5) {
-			streetPropertyData[x] = {};
-			for (let y = 0.5;y <= size;(x % 2 == 0) ? (y++) : (y+=0.5)) {
-				streetPropertyData[x][y] = {};
-				streetPropertyData[x][y].surfaceType = "";  // road, light rail, interstate, etc.
-				streetPropertyData[x][y].upgrades = {}; // bus stop, bike lane, BRT, etc.
+			gameData.streetPropertyData[x] = {};
+			for (let y = 0.5;y <= size;y++) {
+				gameData.streetPropertyData[x][y] = {};
+				gameData.streetPropertyData[x][y].surfaceType = "";  // road, light rail, interstate, etc.
+				gameData.streetPropertyData[x][y].upgrades = {}; // bus stop, bike lane, BRT, etc.
 			}
 		}
 		
-		console.log(streetPropertyData);
+		console.log(gameData.streetPropertyData);
 	}
 	
 	return {

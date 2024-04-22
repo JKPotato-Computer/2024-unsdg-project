@@ -13,7 +13,7 @@ global.css - Webpage Global Configs
   --linearPrimarySecondary: linear-gradient(#02558d, #901838);
   --linearPrimaryAccent: linear-gradient(#02558d, #3dff74);
   --linearSecondaryAccent: linear-gradient(#901838, #3dff74);
- --radialPrimarySecondary: radial-gradient(#02558d, #901838);
+  --radialPrimarySecondary: radial-gradient(#02558d, #901838);
   --radialPrimaryAccent: radial-gradient(#02558d, #3dff74);
   --radialSecondaryAccent: radial-gradient(#901838, #3dff74);
 }
@@ -54,3 +54,22 @@ h3 {font-size: 1.954rem; /* 31.2px */}
 h4 {font-size: 1.563rem; /* 24.96px */}
 h5 {font-size: 1.250rem; /* 20px */}
 small {font-size: 0.800rem; /* 12.8px */}
+
+content {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+button {
+  border: 0;
+  background: none;
+  min-height: 24px;
+  min-width: 24px;
+  aspect-ratio: 1/1;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: .15s ease-in-out;
+}

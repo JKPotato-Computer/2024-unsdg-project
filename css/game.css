@@ -1,3 +1,219 @@
 /* 
 game.css - UI Elements in the actual game
 */
+
+content#gameInterface * {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+canvas#gameWorld {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: var(--background);
+}
+
+div#gameStatus {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 12px;
+    width: calc(100%-24px);
+    position: relative;
+}
+
+div#gameStatus > div:nth-child(1) {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 12px;
+}
+
+div#gameStatus > div:nth-child(2) {
+    flex-grow: 1;
+    position: fixed;
+    left: 50%;
+    transform: translateX(calc(-25% - 25vh));
+    width: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+div#SDGList {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+}
+
+div.SDGHolder {
+    height: 111px;
+    width: 111px;
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    background-size: 100%;
+}
+
+.SDG3 { background-image: url("../img/G3.png"); }
+.SDG6 { background-image: url("../img/G6.png"); }
+.SDG7 { background-image: url("../img/G7.png"); }
+.SDG9 { background-image: url("../img/G9.png"); }
+.SDG11 { background-image: url("../img/G11.png"); }
+.SDG12 { background-image: url("../img/G12.png"); }
+.SDG13 { background-image: url(".../img/G13.png"); }
+
+progress.SDGProgress::-moz-progress-bar {  background: black; }
+progress.SDGProgress::-webkit-progress-bar { background: black; }
+progress.SDGProgress::-moz-progress-bar {  background: white; }
+progress.SDGProgress::-webkit-progress-value{ background: white; }
+
+progress.SDGProgress {
+    border: 0;
+    width: 100%;
+    height: 8px;
+    background: black;
+    background-size: cover;
+}
+
+div#gameStatus > div:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+button#returnMenu {
+    font-size: 40px;
+}
+
+button#returnMenu:hover {
+	scale: 1.2;
+}
+
+div#gameCurrency {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+div.currencyHolder {
+    background: var(--background);
+    border: 1.5px solid rgb(202 202 202);
+    border-radius: 64px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 150px;
+    padding: 6px 12px;
+    position: relative;
+}
+
+span.currencyTitle {
+    position: absolute;
+    bottom: -10px;
+    left: 12px;
+    font-weight: bold;
+}
+
+span.currencyText {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+div.dueHolder {
+    background-color: rgba(255,255,0,0.1);
+    border-color: rgb(200 200 0)
+}
+
+div.debtHolder {
+    background-color: rgba(255,0,0,0.1);
+    border-color: rgb(200 0 0)
+}
+
+div#SDGDeadline {
+    background-color: rgba(200,0,0,0.2);
+    border: 1.5px solid red;
+    padding: 6px 18px;
+    border-radius: 64px;
+}
+
+div#gameClock {
+    padding: 6px 12px;
+    border: 1.5px solid rgb(202 202 202);
+    border-radius: 64px;
+    width: 125px;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    position: relative;
+}
+
+span#gameClockOverlay {
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 55px;
+}
+
+div#gameClock > span:not(#gameClockOverlay) {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+div#gameSpeed {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: 90%;
+}
+
+div#gameSpeed * {
+    font-size:32px;
+}
+
+div#gameSpeed .inactive {
+    color: rgb(200 200 200);
+}
+
+div#gameSpeed .inactive:hover {
+    color: rgb(150 150 150);
+}
+
+div#gameButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 32px;
+    width: 100%;
+    gap: 16px;
+}
+
+div#gameButtons button {
+    font-size: 64px;
+    background: black;
+    color: white;
+    padding: 6px;
+    border-radius: 12px;
+}
+
+div#gameButtons button:not(:nth-child(2)) {
+    font-size: 50px;
+}
+
+div#gameButtons button:hover {
+    scale: 1.2;
+}
