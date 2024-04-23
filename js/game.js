@@ -9,7 +9,7 @@ const game = (function() {
 		mapSize : "city"
 	};
 
-	const generateRanndomProperties = function() {
+	const generateRandomProperties = function() {
 		switch (gameData.mapSize) {
 			case "village":
 				break;
@@ -18,6 +18,14 @@ const game = (function() {
 			case "city":
 				break;
 		}
+		
+		let newProperty = new Zone({type : "neighborhood", height : 2, width : 2});
+		gameData.districtPropertyData = newProperty.placeZone(gameData.districtPropertyData,0,0);
+		
+		let newProperty2 = new Zone({type : "neighborhood", height : 2, width : 2});
+		gameData.districtPropertyData = newProperty.placeZone(gameData.districtPropertyData,1,1);
+		
+		console.log(gameData.districtPropertyData);
 
 		/*
 		1) Create a new class Building with parameters of attempted spawnpoint (x,y) from bottom left of building
@@ -32,9 +40,7 @@ const game = (function() {
 		for (let x = 0;x < size;x++) {
 			gameData.districtPropertyData[x] = new Array(size);
 			for (let y = 0;y < size;y++) {
-				gameData.districtPropertyData[x][y] = {};
-				gameData.districtPropertyData[x][y].propertyType = ""; // type of property (ex: factory, neighborhood)
-				gameData.districtPropertyData[x][y].groupName = ""; // collection of similar groups (if any)
+				gameData.districtPropertyData[x][y] = new Zone();
 			}
 		}
 		
@@ -45,7 +51,7 @@ const game = (function() {
 		gameData.streetPropertyData = {};
 		for (let x = 0;x <= size;x+=0.5) {
 			gameData.streetPropertyData[x] = {};
-			for (let y = 0.5;y <= size;y++) {
+			for (let y = (x % 1 != 0) ? (0) : (0.5);y <= size;y++) {
 				gameData.streetPropertyData[x][y] = {};
 				gameData.streetPropertyData[x][y].surfaceType = "";  // road, light rail, interstate, etc.
 				gameData.streetPropertyData[x][y].upgrades = {}; // bus stop, bike lane, BRT, etc.
@@ -57,6 +63,7 @@ const game = (function() {
 	
 	return {
 		createPropertyGrid : createPropertyGrid,
-		createStreetGrid : createStreetGrid
+		createStreetGrid : createStreetGrid,
+		generateRandomProperties : generateRandomProperties
 	};
 })();
