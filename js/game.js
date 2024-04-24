@@ -6,26 +6,29 @@ const game = (function() {
 		yearlyDue : 0,
 		debt : 0,
 		SDG : {},
-		mapSize : "city"
+		mapSize : "village"
 	};
+	
+	const getRandomIntInclusive = function(min, max) {
+	  const minCeiled = Math.ceil(min);
+	  const maxFloored = Math.floor(max);
+	  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+	}
 
 	const generateRandomProperties = function() {
-		switch (gameData.mapSize) {
-			case "village":
-				break;
-			case "town": 
-				break;
-			case "city":
-				break;
+		for (const property of Object.keys(gameEnum.baseProperties[gameData.mapSize])) {
+			for (let i = 0;i < gameEnum.baseProperties[gameData.mapSize][property];i++) {
+				const newProperty = new Zone();
+				newProperty.appendZone(property);
+				let rX = getRandomIntInclusive(0,gameData.districtPropertyData.length);
+				let rY = getRandomIntInclusive(0,gameData.districtPropertyData.length);
+				
+				do {
+					rX = getRandomIntInclusive(0,gameData.districtPropertyData.length);
+					rY = getRandomIntInclusive(0,gameData.districtPropertyData.length);
+				} while (!newProperty.placeZone(gameData.districtPropertyData,rX,rY));
+			}
 		}
-		
-		let newProperty = new Zone();
-		newProperty.appendZone("neighborhood");
-		gameData.districtPropertyData = newProperty.placeZone(gameData.districtPropertyData,0,0);
-		
-		let newProperty2 = new Zone();
-		newProperty2.appendZone("groceryStore");
-		gameData.districtPropertyData = newProperty2.placeZone(gameData.districtPropertyData,4,4);
 		
 		console.log(gameData.districtPropertyData);
 
@@ -35,6 +38,13 @@ const game = (function() {
 		3) IF there is space, place the building into that grid location.
 		4) Pathfind a road from that item to a nearby road, business, or state route.
 		*/
+	}
+	
+	const setupMap = function() {
+		createPropertyGrid(gameEnum.mapSizes[gameData.mapSize]);
+		createStreetGrid(gameEnum.mapSizes[gameData.mapSize]);
+		
+		generateRandomProperties();
 	}
 	
 	const createPropertyGrid = function(size) {
@@ -59,9 +69,15 @@ const game = (function() {
 		}
 	}
 	
+	const getGameData = function() {
+		return gameData;
+	}
+	
 	return {
 		createPropertyGrid : createPropertyGrid,
 		createStreetGrid : createStreetGrid,
-		generateRandomProperties : generateRandomProperties
+		setupMap : setupMap,
+		generateRandomProperties : generateRandomProperties,
+		getGameData : getGameData
 	};
 })();

@@ -1,3 +1,62 @@
+// Game Data Properties
+const gameEnum = (function() {
+	const baseProperties = {
+		village : {
+			neighborhood : 2,
+			gasStation : 1,
+			groceryStore : 1,
+			residentialPark : 2,
+			factory : 3,
+			offices : 2,
+			school : 1,
+			commercialStore : 1
+		},
+		
+		town : {
+			neighborhood : 4,
+			gasStation : 4,
+			commercialStore : 2,
+			commercialMall : 1,
+			fastFoodChain : 1,
+			restaurant : 1,
+			apartment : 2,
+			residentialPark : 4,
+			factory : 5,
+			school: 2,
+			offices: 3
+		},
+		
+		cities : {
+			commercialAirport : 1,
+			factory : 8,
+			school : 4,
+			mansion : 1,
+			commercialStore : 1,
+			commercialMall : 2,
+			fastFoodChain : 5,
+			restaurant : 3,
+			neighborhood : 7,
+			offices : 5,
+			apartment : 4,
+			residentialPark : 4,
+			groceryStore : 3,
+			gasStation : 6
+		}
+	}
+	
+	const mapSizes = {
+		village : 11,
+		towns: 21,
+		cities : 41
+	}
+	
+	return {
+		baseProperties : baseProperties,
+		mapSizes : mapSizes
+	};
+})();
+
+// Zone
 class Zone {
 	/**
 		* Creates a new zone / building with a specific dimension and function.
@@ -57,7 +116,11 @@ class Zone {
 		this.carbonEmissions = carbonEmissions;
 		this.wasteEmissions = wasteEmissions;
 
-		this.id = id;
+		if ((id == 0) || (!id)) {
+			this.id = Math.floor(Math.random() * 100000)
+		} else {
+			this.id = id;
+		}
 	}
 	
 	canBePlaced(districtPropertyData, x, y) {
@@ -92,9 +155,10 @@ class Zone {
 					districtPropertyData[p_x][p_y] = this;
 				}
 			}
+			return districtPropertyData;
 		}
 		
-		return districtPropertyData;
+		return false;
 	}
 
 	appendZone(zone) {
@@ -122,7 +186,6 @@ Zone.prototype.zoneTypes = {
 	gasStation : {
 		type : "gasStation",
 		influence : 2,
-		isDestroyable : true,
 		
 		incomeGenerate : 200,
 		incomeBoost : 0,
@@ -135,7 +198,6 @@ Zone.prototype.zoneTypes = {
 		width: 2,
 		type : "groceryStore",
 		influence : 2,
-		isDestroyable : true,
 		
 		incomeGenerate : 500,
 		incomeBoost : 0,
@@ -148,7 +210,6 @@ Zone.prototype.zoneTypes = {
 		height: 3,
 		type : "residentialPark",
 		influence : 2,
-		isDestroyable : true,
 		
 		incomeGenerate : 20,
 		incomeBoost : 0,
@@ -156,4 +217,97 @@ Zone.prototype.zoneTypes = {
 		carbonEmissions : 0,
 		wasteEmissions : 0.1
 	},
+	factory : {
+		type : "factory",
+		influence : 2.5,
+		isDestroyable : true,
+		
+		incomeGenerate : 1000,
+		incomeBoost : 0,
+		
+		carbonEmissions : 0.6,
+		wasteEmissions : 0.6
+	},
+	offices : {
+		width: 1,
+		height: 2,
+		type : "offices",
+		influence: 1,
+		
+		incomeGenerate : 300,
+		incomeBoost : 0,
+		
+		carbonEmissions : 0.3,
+		wasteEmissions : 0.3
+	},
+	commercialStore : {
+		width: 2,
+		height: 2,
+		type : "commercialStore",
+		influence: 2,
+		
+		incomeGenerate : 600,
+		incomeBoost : 0,
+		
+		carbonEmissions : 0.2,
+		wasteEmissions : 0.1
+	},
+	school : {
+		width: 3,
+		height: 2,
+		type : "school",
+		influence: 3,
+		
+		incomeGenerate : 10,
+		incomeBoost : 0,
+		
+		carbonEmissions : 0.3,
+		wasteEmissions : 0.3
+	}.
+	stateRoute : {
+		width: 1,
+		height: 1,
+		type : "stateRoute",
+		influence: 6,
+	}
+}
+
+// Street
+
+class Street {
+	/**
+		* Creates a new steet
+		
+		* @param {object} [street] - Optional parameters
+		* @param {number} [street.influence] - Influence of street
+		* @param {number} [street.roadLanes] - Lanes on road
+		* @param {string} [street.type] - Type of street (interstate, road, bike road, etc.)
+		
+		* @param {boolean} [street.hasSidewalk]
+		* @param {boolean} [street.hasInterstate]
+		* @param {boolean} [street.hasBusStop]
+		* @param {boolean} [street.hasBikeLane]
+		
+	*/
+	
+	constructor({
+		influence = 0,
+		roadLanes = 0,
+		type = "",
+		
+		hasSidewalk = false,
+		hasInterstate = false,
+		hasBusStop = false,
+		hasBikeLane = false
+	} = {}
+	) {
+		this.influence = influence;
+		this.roadLanes = roadLanes;
+		this.type = type;
+		
+		this.hasSidewalk = hasSidewalk;
+		this.hasInterstate = hasInterstate;
+		this.hasBusStop = hasBusStop;
+		this.hasBikeLane = hasBikeLane;
+	}
 }
