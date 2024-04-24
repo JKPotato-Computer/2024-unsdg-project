@@ -19,11 +19,13 @@ const game = (function() {
 				break;
 		}
 		
-		let newProperty = new Zone({type : "neighborhood", height : 2, width : 2});
+		let newProperty = new Zone();
+		newProperty.appendZone("neighborhood");
 		gameData.districtPropertyData = newProperty.placeZone(gameData.districtPropertyData,0,0);
 		
-		let newProperty2 = new Zone({type : "neighborhood", height : 2, width : 2});
-		gameData.districtPropertyData = newProperty.placeZone(gameData.districtPropertyData,1,1);
+		let newProperty2 = new Zone();
+		newProperty2.appendZone("groceryStore");
+		gameData.districtPropertyData = newProperty2.placeZone(gameData.districtPropertyData,4,4);
 		
 		console.log(gameData.districtPropertyData);
 
@@ -43,8 +45,6 @@ const game = (function() {
 				gameData.districtPropertyData[x][y] = new Zone();
 			}
 		}
-		
-		console.log(gameData.districtPropertyData);
 	}
 	
 	const createStreetGrid = function(size) {
@@ -57,8 +57,6 @@ const game = (function() {
 				gameData.streetPropertyData[x][y].upgrades = {}; // bus stop, bike lane, BRT, etc.
 			}
 		}
-		
-		console.log(gameData.streetPropertyData);
 	}
 	
 	return {
