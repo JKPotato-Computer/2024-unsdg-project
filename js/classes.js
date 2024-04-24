@@ -69,7 +69,9 @@ class Zone {
 		* @param {number} [zone.influence] - Influence on surrounding roads
 		* @param {boolean} [zone.isDestroyable] - Can be destroyed or not
 		* @param {boolean} [zone.isInConstruction] - Being built?
-	
+		* @param {boolean} [zone.canGenerateRoad] - Can generate road?
+		* @param {boolean} [zone.isCommercial] - Is Commercial	
+		
 		// Gross Domestic Income
 		* @param {number} [zone.incomeGenerate] - UND to generate per month, influenced by region
 		* @param {number} [zone.incomeBoost] - Maximum % boost to nearby influenced businesses
@@ -91,6 +93,7 @@ class Zone {
 		isDestroyable = true,
 		isInConstruction = false,
 		canGenerateRoad = false,
+		isCommercial = true,
 		
 		incomeGenerate = 0,
 		incomeBoost = 0,
@@ -99,7 +102,7 @@ class Zone {
 		carbonEmissions = 0,
 		wasteEmissions = 0,
 		
-		id = 0
+		id = 0,
 	} = {}
 	) {
 		this.height = height;
@@ -108,6 +111,8 @@ class Zone {
 		this.influence = influence;
 		this.isDestroyable = isDestroyable;
 		this.isInConstruction = isInConstruction;
+		this.isCommercial = isCommercial;
+		this.canGenerateRoad = canGenerateRoad;
 		
 		this.incomeGenerate = incomeGenerate;
 		this.incomeBoost = incomeBoost;
@@ -117,10 +122,18 @@ class Zone {
 		this.wasteEmissions = wasteEmissions;
 
 		if ((id == 0) || (!id)) {
-			this.id = Math.floor(Math.random() * 100000)
+			this.id = Math.floor(Math.random() * 10000000)
 		} else {
 			this.id = id;
 		}
+	}
+
+	getZoneByXY(districtPropertyData, x, y) {
+		if ((x < 0) || (y < 0) || (x > districtPropertyData.length) || (y > districtPropertyData.length)) {
+			return false;
+		}
+
+		return (districtPropertyData[x][y].type == "") ? false : districtPropertyData[x][y];
 	}
 	
 	canBePlaced(districtPropertyData, x, y) {
@@ -166,7 +179,131 @@ class Zone {
 			this[key] = Zone.prototype.zoneTypes[zone][key];
 		}
 	}
+
+	
+	detectNearbyBusiness(districtPropertyData) {
+		// Locaate a valid id
+		let propertyCornerX,propertyCornerY;
+		for (let x = 0;x < districtPropertyData.length;x++) {
+			for (let y = 0;y < districtPropertyData.length;y++) {
+				if ((districtPropertyData[x][y].id == this.id) && (districtPropertyData[x][y].canGenerateRoad == true)) {
+					propertyCornerX = x;
+					propertyCornerY = y;
+					break;
+				}
+			}
+		}
+
+		if ((!propertyCornerX) || (!propertyCornerY)) {
+			console.log("Failure:");
+			return [-1,-1]; // skill issue
+		}
+		
+
+		for (let l = 1;l < ((this.influence / .5) + 1);l++) {
+			let xOppOffset = propertyCornerX + (this.width - 1) + l;
+			let yOppOffset = propertyCornerY + (this.height - 1) + l;
+			console.log(xOppOffset,yOppOffset);
+
+			for (let x = propertyCornerX - 1;x < (this.width + 1);x++) {
+				if ((x < 0) || (x > districtPropertyData.length - 1)) {
+					continue;
+				}
+
+				if ((propertyCornerY - l < 0) || (propertyCornerY - l> districtPropertyData.length - 1)) { 
+					continue;
+				}
+
+				let property = districtPropertyData[x][propertyCornerY - l];
+				console.log(property);
+
+				if (!property) {
+					continue;
+				}
+
+				if ((property.type != "") && (property.isCommercial)) {
+					return [x,propertyCornerY - l];
+				}
+			}
+
+			for (let y = propertyCornerY - 1;y < (this.height + 1);y++) {
+				if ((y < 0) || (y > districtPropertyData.length - 1)) {
+					continue;
+				}
+
+				if ((xOppOffset < 0) || (xOppOffset > districtPropertyData.length - 1)) { 
+					continue;
+				}
+
+				let property = districtPropertyData[xOppOffset][y];
+				console.log(property);
+
+				if (!property) {
+					continue;
+				}
+
+				if ((property.type != "") && (property.isCommercial)) {
+					return [xOppOffset,y];
+				}
+			}
+
+			for (let x = propertyCornerX - 1;x < (this.width + 1);x++) {
+				if ((x < 0) || (x > districtPropertyData.length - 1)) {
+					continue;
+				}
+
+				if ((yOppOffset < 0) || (yOppOffset > districtPropertyData.length - 1)) { 
+					continue;
+				}
+
+				let property = districtPropertyData[x][yOppOffset];
+				console.log(property);
+
+				if (!property) {
+					continue;
+				}
+
+				if ((property.type != "") && (property.isCommercial)) {
+					return [x,yOppOffset];
+				}
+			}
+			
+			for (let y = propertyCornerY - 1;y < (this.height + 1);y++) {
+				if ((y < 0) || (y > districtPropertyData.length - 1)) {
+					continue;
+				}
+
+				if ((propertyCornerX - l < 0) || (propertyCornerX - l > districtPropertyData.length - 1)) { 
+					continue;
+				}
+
+				let property = districtPropertyData[propertyCornerX - l][y];
+				console.log(property);
+
+				if (!property) {
+					continue;
+				}
+
+				if ((property.type != "") && (property.isCommercial)) {
+					return [propertyCornerX - l,y];
+				}
+			}
+		}
+
+		return [-1,-1];
+	}
+
+	pathfindStreet(districtPropertyData, streetPropertyData) {
+		let [x,y] = this.detectNearbyBusiness(districtPropertyData);
+		
+		console.log(x,y);
+		if ((x == -1) || (y == -1)) {
+			return false;
+		}
+	}
 }
+
+
 
 Zone.prototype.zoneTypes = {
 	neighborhood : {
@@ -176,6 +313,7 @@ Zone.prototype.zoneTypes = {
 		influence : 2,
 		isDestroyable : true,
 		canGenerateRoad : true,
+		isCommercial : false,
 		
 		incomeGenerate : 100,
 		incomeBoost : 0.10,
@@ -210,6 +348,7 @@ Zone.prototype.zoneTypes = {
 		height: 3,
 		type : "residentialPark",
 		influence : 2,
+		isCommercial : false,
 		
 		incomeGenerate : 20,
 		incomeBoost : 0,
@@ -221,6 +360,7 @@ Zone.prototype.zoneTypes = {
 		type : "factory",
 		influence : 2.5,
 		isDestroyable : true,
+		canGenerateRoad : true,
 		
 		incomeGenerate : 1000,
 		incomeBoost : 0,
@@ -263,12 +403,19 @@ Zone.prototype.zoneTypes = {
 		
 		carbonEmissions : 0.3,
 		wasteEmissions : 0.3
-	}.
+	},
 	stateRoute : {
-		width: 1,
-		height: 1,
 		type : "stateRoute",
 		influence: 6,
+
+		carbonEmissions : 0.1,
+	},
+	cbd : {
+		type : "cbd",
+		influence: 6,
+
+		incomeGenerate : 1000,
+		incomeBoost : 10,
 	}
 }
 

@@ -44,7 +44,44 @@ const game = (function() {
 		createPropertyGrid(gameEnum.mapSizes[gameData.mapSize]);
 		createStreetGrid(gameEnum.mapSizes[gameData.mapSize]);
 		
+		let CBDIndex = (gameEnum.mapSizes[gameData.mapSize] - 1)/2;
+		for (let x = 0;x < gameEnum.mapSizes[gameData.mapSize];x++) {
+			let property = new Zone();
+			if (x == CBDIndex) {
+				property.appendZone("cbd");
+
+				if (gameData.mapSize == "city") {
+					for (let y = 0;y < gameEnum.mapSizes[gameData.mapSize];y++) {
+						if (y == CBDIndex) {
+							continue;
+						}
+
+						let stateRoute = new Zone();
+						stateRoute.appendZone("stateRoute");
+						stateRoute.placeZone(gameData.districtPropertyData,CBDIndex,y);
+					}
+				}
+
+			} else {
+				property.appendZone("stateRoute")
+			}
+
+			property.placeZone(gameData.districtPropertyData,x,CBDIndex)
+		}
+
 		generateRandomProperties();
+
+		let checkIDs = [];
+		for (let x = 0; x < gameEnum.mapSizes[gameData.mapSize];x++) {
+			for (let y = 0; y < gameEnum.mapSizes[gameData.mapSize];y++) {
+				let property = gameData.districtPropertyData[x][y];
+				
+				if ((!checkIDs.includes(property.id)) && (property.canGenerateRoad)) {
+					property.pathfindStreet(gameData.districtPropertyData,gameData.streetPropertyData);
+					checkIDs.push(property.id);
+				}
+			}
+		}
 	}
 	
 	const createPropertyGrid = function(size) {
