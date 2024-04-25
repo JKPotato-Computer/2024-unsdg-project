@@ -1,9 +1,6 @@
 const canvas = document.getElementById('gameWorld');
 const ctx = canvas;
 
-ctx.fillStyle = "blue";
-ctx.fillRect(10,10,100,100);
-
 const game = (function() {
 	let gameData = {
 		districtPropertyData : [],
@@ -129,6 +126,9 @@ const game = (function() {
 
 function animate(){
 	ctx.clearRect();
+	ctx.fillStyle = "blue";
+	ctx.fillRect(10,10,100,100);
+
 	animate();
 }
 animate();
