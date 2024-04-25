@@ -1,3 +1,6 @@
+const canvas = document.getElementById('gameWorld');
+const ctx = canvas;
+
 const game = (function() {
 	let gameData = {
 		districtPropertyData : [],
