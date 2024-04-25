@@ -122,13 +122,9 @@ const game = (function() {
 })();
 
 const canvas = document.getElementById('gameWorld');
+canvas.width = 600;
+canvas.height = 600;
 const ctx = canvas.getContext('2d');
 
-function animate(){
-	ctx.clearRect();
-	ctx.fillStyle = "blue";
-	ctx.fillRect(100,100,100,100);
-
-	animate();
-}
-animate();
+ctx.fillStyle = "blue";
+ctx.fillRect(100,100,100,100);
