@@ -127,7 +127,7 @@ const game = (function() {
 function animate(){
 	ctx.clearRect();
 	ctx.fillStyle = "blue";
-	ctx.fillRect(10,10,100,100);
+	ctx.fillRect(100,100,100,100);
 
 	animate();
 }
