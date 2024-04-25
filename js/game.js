@@ -82,6 +82,8 @@ const game = (function() {
 				}
 			}
 		}
+		
+		console.log(gameData.streetPropertyData);
 	}
 	
 	const createPropertyGrid = function(size) {
