@@ -186,16 +186,17 @@ class Zone {
 		let propertyCornerX,propertyCornerY;
 		for (let x = 0;x < districtPropertyData.length;x++) {
 			for (let y = 0;y < districtPropertyData.length;y++) {
-				if ((districtPropertyData[x][y].id == this.id) && (districtPropertyData[x][y].canGenerateRoad == true)) {
+				if ((districtPropertyData[x][y] == this)) {
 					propertyCornerX = x;
 					propertyCornerY = y;
 					break;
 				}
 			}
 		}
+		console.log(propertyCornerX,propertyCornerY);
 
-		if ((!propertyCornerX) || (!propertyCornerY)) {
-			console.log("Failure:");
+		if ((!propertyCornerX) && (!propertyCornerY)) {
+			console.warn("Failed to find!");
 			return [-1,-1]; // skill issue
 		}
 		
@@ -203,9 +204,8 @@ class Zone {
 		for (let l = 1;l < ((this.influence / .5) + 1);l++) {
 			let xOppOffset = propertyCornerX + (this.width - 1) + l;
 			let yOppOffset = propertyCornerY + (this.height - 1) + l;
-			console.log(xOppOffset,yOppOffset);
 
-			for (let x = propertyCornerX - 1;x < (this.width + 1);x++) {
+			for (let x = propertyCornerX - 1;x < propertyCornerX + (this.width + 1);x++) {
 				if ((x < 0) || (x > districtPropertyData.length - 1)) {
 					continue;
 				}
@@ -215,7 +215,6 @@ class Zone {
 				}
 
 				let property = districtPropertyData[x][propertyCornerY - l];
-				console.log(property);
 
 				if (!property) {
 					continue;
@@ -226,7 +225,7 @@ class Zone {
 				}
 			}
 
-			for (let y = propertyCornerY - 1;y < (this.height + 1);y++) {
+			for (let y = propertyCornerY - 1;y < propertyCornerY + (this.height + 1);y++) {
 				if ((y < 0) || (y > districtPropertyData.length - 1)) {
 					continue;
 				}
@@ -236,7 +235,6 @@ class Zone {
 				}
 
 				let property = districtPropertyData[xOppOffset][y];
-				console.log(property);
 
 				if (!property) {
 					continue;
@@ -247,7 +245,7 @@ class Zone {
 				}
 			}
 
-			for (let x = propertyCornerX - 1;x < (this.width + 1);x++) {
+			for (let x = propertyCornerX - 1;x < propertyCornerX + (this.width + 1);x++) {
 				if ((x < 0) || (x > districtPropertyData.length - 1)) {
 					continue;
 				}
@@ -257,7 +255,6 @@ class Zone {
 				}
 
 				let property = districtPropertyData[x][yOppOffset];
-				console.log(property);
 
 				if (!property) {
 					continue;
@@ -268,7 +265,7 @@ class Zone {
 				}
 			}
 			
-			for (let y = propertyCornerY - 1;y < (this.height + 1);y++) {
+			for (let y = propertyCornerY - 1;y < propertyCornerY + (this.height + 1);y++) {
 				if ((y < 0) || (y > districtPropertyData.length - 1)) {
 					continue;
 				}
@@ -278,7 +275,6 @@ class Zone {
 				}
 
 				let property = districtPropertyData[propertyCornerX - l][y];
-				console.log(property);
 
 				if (!property) {
 					continue;
@@ -294,12 +290,16 @@ class Zone {
 	}
 
 	pathfindStreet(districtPropertyData, streetPropertyData) {
+		console.log(this);
 		let [x,y] = this.detectNearbyBusiness(districtPropertyData);
-		
-		console.log(x,y);
+
 		if ((x == -1) || (y == -1)) {
+			console.log("Failure");
 			return false;
 		}
+		
+		console.log("Success:")
+		console.log(this.getZoneByXY(districtPropertyData,x,y).type);
 	}
 }
 
@@ -361,6 +361,7 @@ Zone.prototype.zoneTypes = {
 		influence : 2.5,
 		isDestroyable : true,
 		canGenerateRoad : true,
+		isCommercial : false, // to prevent connection
 		
 		incomeGenerate : 1000,
 		incomeBoost : 0,
@@ -456,5 +457,66 @@ class Street {
 		this.hasInterstate = hasInterstate;
 		this.hasBusStop = hasBusStop;
 		this.hasBikeLane = hasBikeLane;
+	}
+	
+	drawStreet(streetPropertyData, x1, y1, direction, spaces) {
+		switch (direction) {
+			case "N":
+				for (let y = y1;y < y1 + spaces;y++) {
+					streetPropertyData[x1][y] = this;
+				}
+				break;
+			case "E":
+				for (let x = x1;x < x1 + spaces;x++) {
+					streetPropertyData[x][y1] = this;
+				}
+				break;
+			case "S":
+				for (let y = y1;y >= y1 - spaces;y--) {
+					streetPropertyData[x1][y] = this;
+				}
+				break;
+			case "W":
+				for (let x = x1;x >= x1 - spaces;x--) {
+					streetPropertyData[x][y1] = this;
+				}
+				break;
+		}
+		
+		return streetPropertyData;
+	}
+	
+	getStreetByZoneDirection(districtPropertyData, zone, zoneX, zoneY, direction) {
+		let property = districtPropertyData[zoneX][zoneY];
+		switch (direction) {
+			case "N":
+				for (let y = zoneY;y < districtPropertyData.length - 1;y++) {
+					if (districtPropertyData[zoneX][y].id != zone.id) {
+						return [zoneX + .5,y + 1];
+					}
+				}
+				break;
+			case "E":
+				for (let x = zoneX;x < districtPropertyData.length - 1;x++) {
+					if (districtPropertyData[x][zoneY].id != zone.id) {
+						return [x + 1,zoneY + .5];
+					}
+				}
+				break;
+			case "S":
+				for (let y = zoneY;y >= 0;y-- {
+					if (districtPropertyData[zoneX][y].id != zone.id) {
+						return [zoneX + .5,y + 1];
+					}
+				}
+				break;
+			case "W":
+				for (let x = zoneX;x >= 0;x--) {
+					if (districtPropertyData[x][zoneY].id != zone.id) {
+						return [x + 1,zoneY + .5];
+					}
+				}
+				break;
+		}
 	}
 }
