@@ -1,6 +1,3 @@
-const canvas = document.getElementById('gameWorld');
-const ctx = canvas;
-
 const game = (function() {
 	let gameData = {
 		districtPropertyData : [],
@@ -123,6 +120,9 @@ const game = (function() {
 		getGameData : getGameData
 	};
 })();
+
+const canvas = document.getElementById('gameWorld');
+const ctx = canvas.getContext('2d');
 
 function animate(){
 	ctx.clearRect();
