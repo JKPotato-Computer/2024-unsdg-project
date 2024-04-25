@@ -90,7 +90,7 @@ class Zone {
 		width = 1,
 		type = "",
 		influence = .5,
-		isDestroyable = true,
+		isDestroyable = false,
 		isInConstruction = false,
 		canGenerateRoad = false,
 		isCommercial = true,
@@ -140,33 +140,27 @@ class Zone {
 		let propertyCornerX,propertyCornerY;
 		for (let x = 0;x < districtPropertyData.length;x++) {
 			for (let y = 0;y < districtPropertyData.length;y++) {
-				if ((districtPropertyData[x][y] == this)) {
+				if ((districtPropertyData[x][y].id == this.id)) {
 					propertyCornerX = x;
 					propertyCornerY = y;
-					break;
+					return [x,y];
 				}
 			}
 		}
-		console.log(propertyCornerX,propertyCornerY);
 
-		if ((!propertyCornerX) && (!propertyCornerY)) {
-			console.warn("Failed to find!");
-			return [-1,-1]; // skill issue
-		}
-		
-		return [propertyCornerX, propertyCornerY];
+		return [-1,-1];
 	}
 	
 	getRelativeLocationOfZone(districtPropertyData, zoneX, zoneY) {
 		let [propertyCornerX, propertyCornerY] = this.getCornerIdentifierOfZone(districtPropertyData);
 		if ((propertyCornerY - 1 < zoneY) && (propertyCornerY + this.height > zoneY)) {
-			if (propertyCornerX + this.width < zoneX) {
+			if (propertyCornerX + this.width <= zoneX) {
 				return "E";
 			} else {
 				return "W";
 			}
 		} else {
-			if (propertyCornerY + this.height < zoneY) {
+			if (propertyCornerY + this.height <= zoneY) {
 				return "N";
 			} else {
 				return "S";
@@ -313,16 +307,12 @@ class Zone {
 	}
 
 	pathfindStreet(districtPropertyData, streetPropertyData) {
-		console.log(this);
 		let [x,y, spaces] = this.detectNearbyBusiness(districtPropertyData);
 
 		if ((x == -1) || (y == -1)) {
-			console.log("Failure");
+			console.log("No location.");
 			return false;
 		}
-		
-		console.log("Success:")
-		console.log(this.getZoneByXY(districtPropertyData,x,y).type);
 		
 		let relativeDirection = this.getRelativeLocationOfZone(districtPropertyData, x, y);
 		let [cornerX, cornerY] = this.getCornerIdentifierOfZone(districtPropertyData);
@@ -331,28 +321,41 @@ class Zone {
 		baseStreet.type = "road";
 		baseStreet.roadLanes = 1;
 		baseStreet.influence = this.influence;
+
+		console.log("Base Location:",this.type,this.getCornerIdentifierOfZone(districtPropertyData));
+		console.log("Destination:",this.getZoneByXY(districtPropertyData,x,y).type,x,y,relativeDirection);
 		
 		let destX,destY;
 		switch (relativeDirection) {
 			case "N":
 				[destX,destY] = baseStreet.getStreetByZoneDirection(districtPropertyData, this, x, y, "E");
 				baseStreet.drawStreet(streetPropertyData,destX,destY - spaces,relativeDirection, spaces, this.influence);
+				break;
 			case "E":
 				[destX,destY] = baseStreet.getStreetByZoneDirection(districtPropertyData, this, x, y, "N");
 				baseStreet.drawStreet(streetPropertyData,destX - spaces,destY,relativeDirection, spaces, this.influence);
+				break;
 			case "S":
 				[destX,destY] = baseStreet.getStreetByZoneDirection(districtPropertyData, this, x, y, "W");
 				baseStreet.drawStreet(streetPropertyData,destX,destY + spaces,relativeDirection, spaces, this.influence);
+				break;
 			case "W":
 				[destX,destY] = baseStreet.getStreetByZoneDirection(districtPropertyData, this, x, y, "S");
 				baseStreet.drawStreet(streetPropertyData,destX + spaces,destY,relativeDirection, spaces, this.influence);
+				break;
 		}
+		console.log("Street Destination:",destX,destY)
 		
 		return streetPropertyData;
 	}
 }
 
-
+Zone.prototype.zoneCoding = {
+	neighborhood: {
+		hex : "", // hex string w/o #
+		icon : "" // use google fonts name
+	}
+}
 
 Zone.prototype.zoneTypes = {
 	neighborhood : {
@@ -407,7 +410,7 @@ Zone.prototype.zoneTypes = {
 	},
 	factory : {
 		type : "factory",
-		influence : 2.5,
+		influence : 4.5,
 		isDestroyable : true,
 		canGenerateRoad : true,
 		isCommercial : false, // to prevent connection
@@ -509,34 +512,43 @@ class Street {
 	}
 	
 	drawStreet(streetPropertyData, x1, y1, direction, spaces, maxInfluence) {
-		console.log(x1, y1)
+		let influence = maxInfluence;
+		console.log("drawStreet Parameters:",x1, y1, direction, spaces, influence)
 		switch (direction) {
 			case "N":
 				for (let y = y1;y < y1 + spaces;y++) {
-					streetPropertyData[x1][y] = this;
-					streetPropertyData[x1][y].influence = maxInfluence;
-					maxInfluence -= 0.5;
+					let street = this;
+					this.influence = influence;
+					streetPropertyData[x1][y] = street;
+					influence -= 0.5;
+					console.log(direction,"New Influence:",influence,"// Location:",x1, y);
 				}
 				break;
 			case "E":
 				for (let x = x1;x < x1 + spaces;x++) {
-					streetPropertyData[x][y1] = this;
-					streetPropertyData[x][y1].influence = maxInfluence;
-					maxInfluence -= 0.5;
+					let street = this;
+					this.influence = influence;
+					streetPropertyData[x][y1] = street;
+					influence -= 0.5;
+					console.log(direction,"New Influence:",influence,"// Location:",x, y1);
 				}
 				break;
 			case "S":
 				for (let y = y1;y >= y1 - spaces;y--) {
-					streetPropertyData[x1][y] = this;
-					streetPropertyData[x1][y].influence = maxInfluence;
-					maxInfluence -= 0.5;
+					let street = this;
+					this.influence = influence;
+					streetPropertyData[x1][y] = street;
+					influence -= 0.5;
+					console.log(direction,"New Influence:",influence,"// Location:",x1, y);
 				}
 				break;
 			case "W":
 				for (let x = x1;x >= x1 - spaces;x--) {
-					streetPropertyData[x][y1] = this;
-					streetPropertyData[x][y1].influence = maxInfluence;
-					maxInfluence -= 0.5;
+					let street = this;
+					this.influence = influence;
+					streetPropertyData[x][y1] = street;
+					influence -= 0.5;
+					console.log(direction,"New Influence:",influence,"// Location:",x, y1);
 				}
 				break;
 		}
@@ -546,32 +558,33 @@ class Street {
 	
 	getStreetByZoneDirection(districtPropertyData, zone, zoneX, zoneY, direction) {
 		let property = districtPropertyData[zoneX][zoneY];
+		console.log("getStreetByZoneDirection Parameters:",zoneX,zoneY,direction);
 		switch (direction) {
 			case "N":
 				for (let y = zoneY;y < districtPropertyData.length - 1;y++) {
-					if (districtPropertyData[zoneX][y].id != zone.id) {
-						return [zoneX + .5,y + 1];
+					if (districtPropertyData[zoneX][y] != zone) {
+						return [zoneX + .5,y];
 					}
 				}
 				break;
 			case "E":
 				for (let x = zoneX;x < districtPropertyData.length - 1;x++) {
-					if (districtPropertyData[x][zoneY].id != zone.id) {
-						return [x + 1,zoneY + .5];
+					if (districtPropertyData[x][zoneY] != zone) {
+						return [x,zoneY + .5];
 					}
 				}
 				break;
 			case "S":
 				for (let y = zoneY;y >= 0;y--) {
-					if (districtPropertyData[zoneX][y].id != zone.id) {
-						return [zoneX + .5,y + 1];
+					if (districtPropertyData[zoneX][y] != zone) {
+						return [zoneX + .5,y];
 					}
 				}
 				break;
 			case "W":
 				for (let x = zoneX;x >= 0;x--) {
-					if (districtPropertyData[x][zoneY].id != zone.id) {
-						return [x + 1,zoneY + .5];
+					if (districtPropertyData[x][zoneY] != zone) {
+						return [x,zoneY + .5];
 					}
 				}
 				break;

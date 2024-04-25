@@ -121,10 +121,22 @@ const game = (function() {
 	};
 })();
 
-const canvas = document.getElementById('gameWorld');
-canvas.width = 600;
-canvas.height = 600;
+const canvas = document.getElementById("gameWorld");
+canvas.height = 1000;
+canvas.width = 1000;
 const ctx = canvas.getContext('2d');
 
-ctx.fillStyle = "blue";
-ctx.fillRect(100,100,100,100);
+let sX = 100;
+let sY = 100;
+
+function animate(){
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	ctx.fillStyle = "red";
+	ctx.fillRect(0,0,sX,sY);
+	
+	sX += 1;
+	sY += 1;
+
+	requestAnimationFrame(animate);
+}
+animate();

@@ -10,11 +10,9 @@ content#gameInterface * {
 
 canvas#gameWorld {
     position: fixed;
-    inset: 0;
-    width: 600;
-    height: 600;
     z-index: -1;
-    background: var(--background);
+    inset: 0;
+    width: 100%;
 }
 
 div#gameStatus {
