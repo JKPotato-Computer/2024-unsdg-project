@@ -7,12 +7,17 @@ const game = (function() {
 		debt : 0,
 		SDG : {
 			"SDG3" : 10,
-			"SDG6" : 40,
+			"SDG6" : 20,
+			"SDG7" : 30,
+			"SDG9" : 40,
+			"SDG11" : 50,
+			"SDG12" : 60,
+			"SDG13" : 70,
 		},
 		SDGDeadline : 0,
-		mapSize : "town",
+		mapSize : "village",
 		
-		gameSpeed : 1,
+		gameSpeed : 0,
 		timeElapsed : 0,
 		date : {month : 0,year : 0},
 		dateSwitch : false,
@@ -33,6 +38,8 @@ const game = (function() {
 		document.querySelector("#gameDebtValue").textContent = gameData.debt;
 		document.querySelector("#gameDebtValue").parentElement.style.display = (gameData.debt == 0) ? ("none") : ("");
 		document.querySelector("#clockTime").textContent = String(gameData.date.month+1).padStart(2,"0") + "/" + gameData.date.year;
+		document.querySelector("#gameClockOverlay").textContent = "clock_loader_" + ((gameData.timeElapsed % 5 != 0) ? ((gameData.timeElapsed%5)*20) : ("10"));
+
 		document.querySelector("#SDGDeadline").innerHTML = "DEADLINE FOR SDG: <b>" + Math.floor(gameData.SDGDeadline / 60) + "m " + (gameData.SDGDeadline % 60) + "s" + "</b>"
 	
 		while (document.querySelector("#SDGList").firstChild) {
@@ -160,7 +167,7 @@ const game = (function() {
 		
 		inSession = true;
 		gameData.timeElapsed = 0;
-		gameData.SDGDeadline = 1200;
+		gameData.SDGDeadline = 1200 - (date.getMonth() * 60);
 		
 		gameData.budget = gameEnum.baseConfig[gameData.mapSize].budget;
 		gameData.yearlyDue = gameEnum.baseConfig[gameData.mapSize].yearlyDue;
@@ -202,30 +209,6 @@ const game = (function() {
 		
 		gameData.timeElapsed++;
 		gameData.SDGDeadline--;
-		
-		switch (gameData.timeElapsed % 60) {
-			case 0:
-				gameData.budget += Math.floor(gameEnum.baseConfig[gameData.mapSize].budget * 0.3);
-				gameData.budget -= gameData.yearlyDue;
-				
-				if ((gameData.debt > 0) && (gameData.debt - gameData.budget <= 0)) {
-					gameData.debt -= gameData.budget;
-					gameData.budget = 0;
-				}
-				
-				gameData.yearlyDue = Math.floor(gameEnum.baseConfig[gameData.mapSize].yearlyDue * (1.001 * Math.floor(gameData.timeElapsed / 60)));
-				
-				if (gameData.budget < 0) {
-					gameData.debt += (Math.abs(gameData.budget));
-					gameData.budget = 0;
-				}
-				
-				if (SDGDeadline == 0) {
-					SDGDeadline = 1200;
-				}
-				
-				break;
-		}
 
 		switch (gameData.timeElapsed % 5) {
 			case 0:
@@ -236,18 +219,36 @@ const game = (function() {
 				if (gameData.date.month == 11) {
 					gameData.date.month = 0;
 					gameData.date.year++;
+
+					gameData.budget += Math.floor(gameEnum.baseConfig[gameData.mapSize].budget * 0.3);
+					gameData.budget -= gameData.yearlyDue;
+				
+					if ((gameData.debt > 0) && (gameData.debt - gameData.budget <= 0)) {
+						gameData.debt -= gameData.budget;
+						gameData.budget = 0;
+					}
+				
+					gameData.yearlyDue = Math.floor(gameEnum.baseConfig[gameData.mapSize].yearlyDue * (1.001 * Math.floor(gameData.timeElapsed / 60)));
+				
+					if (gameData.budget < 0) {
+						gameData.debt += (Math.abs(gameData.budget));
+						gameData.budget = 0;
+					}
+
 				} else {
 					gameData.date.month++;
 				}
 				
 				let incomeGenerated = generateIncome();
 				gameData.yearlyDue += Math.floor(incomeGenerated / 10);
-				document.querySelector("#gameClockOverlay").textContent = "clock_loader_10";
 				
 				gameData.dateSwitch = true;
 				break;
 			default:
-				document.querySelector("#gameClockOverlay").textContent = "clock_loader_" + (gameData.timeElapsed%5)*20;
+				if (gameData.SDGDeadline <= 0) {
+					gameData.SDGDeadline = 1200;
+				}
+
 				gameData.dateSwitch = false;
 				break;
 		}

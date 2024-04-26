@@ -67,7 +67,7 @@ div.SDGHolder {
 .SDG9 { background-image: url("../img/G9.png"); }
 .SDG11 { background-image: url("../img/G11.png"); }
 .SDG12 { background-image: url("../img/G12.png"); }
-.SDG13 { background-image: url(".../img/G13.png"); }
+.SDG13 { background-image: url("../img/G13.png"); }
 
 progress.SDGProgress::-moz-progress-bar {  background: black; }
 progress.SDGProgress::-webkit-progress-bar { background: black; }

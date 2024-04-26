@@ -59,7 +59,7 @@ const gameEnum = (function() {
 	const baseConfig = {
 		village: {
 			budget : 20000,
-			yearlyDue : 1000
+			yearlyDue : 5000
 		},
 		town: {
 			budget : 200000,
