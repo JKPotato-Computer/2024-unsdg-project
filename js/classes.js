@@ -26,7 +26,7 @@ const gameEnum = (function() {
 			offices: 3
 		},
 		
-		cities : {
+		city : {
 			commercialAirport : 1,
 			factory : 8,
 			school : 4,
@@ -46,13 +46,37 @@ const gameEnum = (function() {
 	
 	const mapSizes = {
 		village : 11,
-		towns: 21,
-		cities : 41
+		town: 21,
+		city : 41
+	}
+	
+	const gameSpeed = {
+		"pause": 0,
+		"normalSpeed": 1,
+		"fastSpeed": 3
+	}
+	
+	const baseConfig = {
+		village: {
+			budget : 20000,
+			yearlyDue : 1000
+		},
+		town: {
+			budget : 200000,
+			yearlyDue : 20000
+		},
+		city: {
+			budget : 20000,
+			yearlyDue : 400000
+		},
+		
 	}
 	
 	return {
 		baseProperties : baseProperties,
-		mapSizes : mapSizes
+		mapSizes : mapSizes,
+		gameSpeed : gameSpeed,
+		baseConfig : baseConfig
 	};
 })();
 
@@ -77,6 +101,7 @@ class Zone {
 		* @param {number} [zone.incomeBoost] - Maximum % boost to nearby influenced businesses
 			* if commercial, left as 0
 		* @param {number} [zone.incomeLoss] - % loss to monthly income due to poor choices/stances
+		* @param {[number]} [zone.boostingID] - Businesses to boost income of
 		
 		// Ecological Footprint
 		* @param {number} [zone.carbonEmissions] - Number of carbom emmissions per month
@@ -98,6 +123,7 @@ class Zone {
 		incomeGenerate = 0,
 		incomeBoost = 0,
 		incomeLoss = 0,
+		boostingID = [],
 		
 		carbonEmissions = 0,
 		wasteEmissions = 0,
@@ -117,6 +143,7 @@ class Zone {
 		this.incomeGenerate = incomeGenerate;
 		this.incomeBoost = incomeBoost;
 		this.incomeLoss = incomeLoss;
+		this.boostingID = boostingID;
 		
 		this.carbonEmissions = carbonEmissions;
 		this.wasteEmissions = wasteEmissions;
@@ -136,11 +163,20 @@ class Zone {
 		return (districtPropertyData[x][y].type == "") ? false : districtPropertyData[x][y];
 	}
 	
-	getCornerIdentifierOfZone(districtPropertyData) {
+	getZoneByID(districtPropertyData, id) {
+		let [zoneX,zoneY] = this.getCornerIdentifierOfZone(districtPropertyData, id);
+		if ((zoneX == -1) || (zoneY == -1)) {
+			return false;
+		} else {
+			return this.getZoneByXY(districtPropertyData, zoneX, zoneY);
+		}
+	}
+	
+	getCornerIdentifierOfZone(districtPropertyData,id) {
 		let propertyCornerX,propertyCornerY;
 		for (let x = 0;x < districtPropertyData.length;x++) {
 			for (let y = 0;y < districtPropertyData.length;y++) {
-				if ((districtPropertyData[x][y].id == this.id)) {
+				if ((districtPropertyData[x][y].id == (id || this.id))) {
 					propertyCornerX = x;
 					propertyCornerY = y;
 					return [x,y];
@@ -314,6 +350,8 @@ class Zone {
 			return false;
 		}
 		
+		this.boostingID.push(this.getZoneByXY(districtPropertyData, x,y).id);
+		
 		let relativeDirection = this.getRelativeLocationOfZone(districtPropertyData, x, y);
 		let [cornerX, cornerY] = this.getCornerIdentifierOfZone(districtPropertyData);
 		
@@ -368,7 +406,7 @@ Zone.prototype.zoneTypes = {
 		isCommercial : false,
 		
 		incomeGenerate : 100,
-		incomeBoost : 0.10,
+		incomeBoost : 0.50,
 
 		carbonEmissions : 0.2,
 		wasteEmissions : 0.2
@@ -461,6 +499,7 @@ Zone.prototype.zoneTypes = {
 		type : "stateRoute",
 		influence: 6,
 
+		incomeGenerate : 50,
 		carbonEmissions : 0.1,
 	},
 	cbd : {
@@ -469,6 +508,49 @@ Zone.prototype.zoneTypes = {
 
 		incomeGenerate : 1000,
 		incomeBoost : 10,
+	},
+	commercialMall : {
+		height: 4,
+		width: 2,
+		influence: 3,
+		type : "commercialMall",
+		
+		incomeGenerate: 2000,
+		
+		wasteEmissions: 0.3,
+		carbonEmissions: 0.3
+	},
+	fastFoodChain : {
+		influence: 3,
+		type : "fastFoodChain",
+		
+		incomeGenerate : 600,
+		
+		wasteEmissions : 0.2,
+		carbonEmissions : 0.2
+	},
+	restaurant: {
+		influence: 2,
+		type : "restaurant",
+		
+		incomeGenerate : 800,
+		
+		wasteEmissions: 0.5,
+		carbonEmissions : 0.1
+	},
+	apartment: {
+		influence: 3,
+		height: 4,
+		width: 4,
+		canGenerateRoad: true,
+		isCommercial : false,
+		isDestroyable : true,
+		
+		incomeGenerate: 300,
+		incomeBoost: 1,
+		
+		wasteEmissions: 0.4,
+		carbonEmissions: 0.3
 	}
 }
 
@@ -563,31 +645,31 @@ class Street {
 			case "N":
 				for (let y = zoneY;y < districtPropertyData.length - 1;y++) {
 					if (districtPropertyData[zoneX][y] != zone) {
-						return [zoneX + .5,y];
+						return [zoneX + .5,y+1];
 					}
 				}
-				break;
+				return [zoneX + .5,districtPropertyData.length];
 			case "E":
 				for (let x = zoneX;x < districtPropertyData.length - 1;x++) {
 					if (districtPropertyData[x][zoneY] != zone) {
-						return [x,zoneY + .5];
+						return [x+1,zoneY + .5];
 					}
 				}
-				break;
+				return [districtPropertyData.length,zoneY + .5];
 			case "S":
 				for (let y = zoneY;y >= 0;y--) {
 					if (districtPropertyData[zoneX][y] != zone) {
-						return [zoneX + .5,y];
+						return [zoneX + .5,y+1];
 					}
 				}
-				break;
+				return [zoneX + .5,districtPropertyData.length];
 			case "W":
 				for (let x = zoneX;x >= 0;x--) {
 					if (districtPropertyData[x][zoneY] != zone) {
-						return [x,zoneY + .5];
+						return [x+1,zoneY + .5];
 					}
 				}
-				break;
+				return [districtPropertyData.length,zoneY + .5];
 		}
 	}
 }

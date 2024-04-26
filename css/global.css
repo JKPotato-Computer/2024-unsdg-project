@@ -34,6 +34,7 @@ global.css - Webpage Global Configs
 
 body {
   font-family: 'Roboto';
+  color: var(--text);
   font-weight: 400;
   margin: 0;
 }
