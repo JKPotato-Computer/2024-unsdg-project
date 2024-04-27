@@ -7,16 +7,17 @@ content {
 }
 
 content#gameInterface {
-	display: block;
+	/* display: block; */
 }
 
 content#gameMenu {
-	display: none;
+	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
 	padding: 1.5rem;
 }
+
 content#gameInteface {
 	display: block;
 }
