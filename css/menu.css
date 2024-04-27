@@ -6,8 +6,12 @@ content {
 	display: none;
 }
 
+content#gameInterface {
+	display: block;
+}
+
 content#gameMenu {
-	display: flex;
+	display: none;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
@@ -69,7 +73,7 @@ content#gameMenu {
 	}
 
 	50% {
-		width: 100px;
+		width: 175px;
 	}
 
 	100% {
