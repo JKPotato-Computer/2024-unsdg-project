@@ -13,6 +13,9 @@ content#gameMenu {
 	align-items: center;
 	padding: 1.5rem;
 }
+content#gameInteface {
+	display: block;
+  }
 
 #logo {
 	height: 200px;
