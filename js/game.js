@@ -296,7 +296,7 @@ let sY = 100;
 
 function animate(){
 	ctx.clearRect(0,0,canvas.width,canvas.height);
-	ctx.fillStyle = "rgb(240,240,240)";
+	ctx.fillStyle = "blue";
 	ctx.fillRect(0,0,sX,sY);
 	
 	sX += 1;
