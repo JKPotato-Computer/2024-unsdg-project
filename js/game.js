@@ -277,12 +277,17 @@ const game = (function() {
 		})
 	}
 	
+	const setGameData = function(i,v) {
+		gameData[i] = v;
+	}
+	
 	return {
 		createPropertyGrid : createPropertyGrid,
 		createStreetGrid : createStreetGrid,
 		setupMap : setupMap,
 		generateRandomProperties : generateRandomProperties,
-		getGameData : getGameData
+		getGameData : getGameData,
+		setGameData : setGameData,
 	};
 })();
 

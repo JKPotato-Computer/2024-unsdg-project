@@ -6,20 +6,19 @@ content {
 	display: none;
 }
 
-content#gameInterface {
-	/* display: block; */
+content.active {
+	display: block;
 }
 
 content#gameMenu {
-	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
 	padding: 1.5rem;
 }
 
-content#gameOptions {
-	/*display: block;*/
+content#gameMenu.active {
+	display: flex;
 }
 
 #logo {
@@ -192,4 +191,134 @@ content#gameOptions {
 
 #villageScale {
 	background-image: url("../img/LightVillage.png");
+}
+
+button#returnTitle {
+	font-size: 40px;
+	position: fixed;
+	left: 10px;
+	top: 10px;
+}
+
+button#returnTitle:hover {
+	scale: 1.2;
+}
+
+#mapSizeSelector {
+	display: flex;
+	flex-direction: row;
+	gap: 4px;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+#mapSizeSelector > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 4px;
+	padding: 8px 0px;
+	border-radius: 16px;
+	border: 1px solid gray;
+	background-color: var(--background);
+	margin: 8px;
+}
+
+#mapSize {
+	font-size: 28px;
+	font-weight: bold;
+}
+
+#mapSizeHR {
+	width: 166px;
+	height: 2px;
+	background-color: gray;
+	margin: 6px 24px;
+}
+
+#demoWarning {
+	background-color: rgb(255 0 0);
+	border-radius: 5rem;
+	padding: 3px 12px;
+	color: white;
+	font-weight: bold;
+}
+
+#smallSize, #largeSize {
+	font-size: 36px;
+	border-radius: 36px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 0px solid black;
+}
+
+#smallSize:hover, #largeSize:hover {
+	font-size: 48px;
+}
+
+#gameControl {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	bottom: 5%;
+	transform: translateX(-50%);
+	left: 50%;
+	gap: 16px;
+}
+
+#gameControl > button {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 175px;
+	background-color: var(--primary);
+	padding: 12px;
+	gap: 6px;
+	aspect-ratio: revert;
+	border-radius: 12px;
+}
+
+#gameControl > button:last-child {
+	background-color: var(--secondary);
+}
+
+#gameControl > button > span:not(.material-symbols-rounded) {
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+	font-family: Roboto Condensed;
+}
+
+#gameControl > button > span.material-symbols-rounded  {
+	font-size: 24px;
+	color: white;
+}
+
+#gameControl > button:hover {
+	margin: 0 12px;
+	scale: 1.2;
+}
+
+button#funFactBtn {
+	width: 48px;
+	height: 48px;
+	border-radius: 5rem;
+	font-weight: 700;
+	font-size: 32px;
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background-color: var(--accent);
+}
+
+button#funFactBtn:hover {
+	scale: 1.2;
 }

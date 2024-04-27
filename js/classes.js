@@ -545,6 +545,7 @@ Zone.prototype.zoneTypes = {
 		canGenerateRoad: true,
 		isCommercial : false,
 		isDestroyable : true,
+		type: "apartment",
 		
 		incomeGenerate: 300,
 		incomeBoost: 1,
