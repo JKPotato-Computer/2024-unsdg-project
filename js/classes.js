@@ -400,6 +400,7 @@ Zone.prototype.zoneTypes = {
 		height : 2,
 		width: 2,
 		type : "neighborhood",
+		color: "#183A37",
 		influence : 2,
 		isDestroyable : true,
 		canGenerateRoad : true,
@@ -412,7 +413,10 @@ Zone.prototype.zoneTypes = {
 		wasteEmissions : 0.2
 	},
 	gasStation : {
+		height: 1,
+		width: 1,
 		type : "gasStation",
+		color: "#04151F",
 		influence : 2,
 		
 		incomeGenerate : 200,
@@ -425,6 +429,7 @@ Zone.prototype.zoneTypes = {
 		height: 2,
 		width: 2,
 		type : "groceryStore",
+		color : "#70AB89",
 		influence : 2,
 		
 		incomeGenerate : 500,
@@ -437,6 +442,7 @@ Zone.prototype.zoneTypes = {
 		width: 2,
 		height: 3,
 		type : "residentialPark",
+		color : "#4A4063",
 		influence : 2,
 		isCommercial : false,
 		
@@ -448,6 +454,7 @@ Zone.prototype.zoneTypes = {
 	},
 	factory : {
 		type : "factory",
+		color : "#4F1271",
 		influence : 4.5,
 		isDestroyable : true,
 		canGenerateRoad : true,
@@ -463,18 +470,20 @@ Zone.prototype.zoneTypes = {
 		width: 1,
 		height: 2,
 		type : "offices",
+		color : "#0A3200",
 		influence: 1,
 		
 		incomeGenerate : 300,
 		incomeBoost : 0,
 		
 		carbonEmissions : 0.3,
-		wasteEmissions : 0.3
+		wasteEmissions : 0.3,
 	},
 	commercialStore : {
 		width: 2,
 		height: 2,
 		type : "commercialStore",
+		color : "#E89005",
 		influence: 2,
 		
 		incomeGenerate : 600,
@@ -487,6 +496,7 @@ Zone.prototype.zoneTypes = {
 		width: 3,
 		height: 2,
 		type : "school",
+		color : "#FFFFB3",
 		influence: 3,
 		
 		incomeGenerate : 10,
@@ -497,6 +507,7 @@ Zone.prototype.zoneTypes = {
 	},
 	stateRoute : {
 		type : "stateRoute",
+		color : "#8F9593",
 		influence: 6,
 
 		incomeGenerate : 50,
@@ -504,6 +515,7 @@ Zone.prototype.zoneTypes = {
 	},
 	cbd : {
 		type : "cbd",
+		color : "#191716",
 		influence: 6,
 
 		incomeGenerate : 1000,
@@ -514,7 +526,7 @@ Zone.prototype.zoneTypes = {
 		width: 2,
 		influence: 3,
 		type : "commercialMall",
-		
+		color : "#3D348B",
 		incomeGenerate: 2000,
 		
 		wasteEmissions: 0.3,
@@ -523,7 +535,7 @@ Zone.prototype.zoneTypes = {
 	fastFoodChain : {
 		influence: 3,
 		type : "fastFoodChain",
-		
+		color : "#813405",
 		incomeGenerate : 600,
 		
 		wasteEmissions : 0.2,
@@ -532,7 +544,7 @@ Zone.prototype.zoneTypes = {
 	restaurant: {
 		influence: 2,
 		type : "restaurant",
-		
+		color : "#4A051C",
 		incomeGenerate : 800,
 		
 		wasteEmissions: 0.5,
@@ -540,6 +552,8 @@ Zone.prototype.zoneTypes = {
 	},
 	apartment: {
 		influence: 3,
+		type : "apartment",
+		color : "#854798",
 		height: 4,
 		width: 4,
 		canGenerateRoad: true,
