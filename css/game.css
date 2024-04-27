@@ -1,14 +1,7 @@
 /* 
 game.css - UI Elements in the actual game
 */
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-body{
-    background: black;
-}
+
 content#gameInterface * {
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -16,13 +9,10 @@ content#gameInterface * {
 }
 
 canvas#gameWorld {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 5px solid white;
-    max-width: 100%;
-    max-height: 100%;
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    width: 100%;
 }
 
 div#gameStatus {
