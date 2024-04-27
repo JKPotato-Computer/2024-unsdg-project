@@ -1,7 +1,14 @@
 /* 
 game.css - UI Elements in the actual game
 */
-
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background: black;
+}
 content#gameInterface * {
 	-webkit-user-select: none;
 	-moz-user-select: none;
