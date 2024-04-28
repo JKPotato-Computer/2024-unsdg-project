@@ -3,6 +3,7 @@ global.css - Webpage Global Configs
 */
 /* https://www.realtimecolors.com/?colors=162831-f5fbff-02558d-901838-3dff74&fonts=Roboto-Roboto */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 :root[data-theme="light"] {
   --text: #162831;
   --background: #f5fbff;
@@ -76,4 +77,8 @@ button {
   padding: 0;
   cursor: pointer;
   transition: .15s ease-in-out;
+}
+
+a {
+	color: var(--text);
 }

@@ -15,35 +15,178 @@
 		<script src="js/logic.js"></script>
 		<script src="js/game.js" defer></script>
 		<script src="js/main.js" defer></script>
+		
+		<script>
+			window.addEventListener("load",() => {
+				document.querySelector("#preloader").className = "dissapear";
+				setTimeout(function() {
+					document.body.removeChild(document.querySelector("#preloader"));
+				},1000)
+			})
+		</script>
 	</head>
 
 	<body>
-		<content id="modalHolder">
-		</content>
-		<content id="gameMenu" class="active">
-			<div id="logoHolder">
-				<img src="img/SDGLabel.png" id="logo">
-				<div>
-					<div class="logoBar"></div>
-					<div class="logoText">THE GAME</div>
-					<div class="logoBar"></div>
+		<dialog id="gameStatistics">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
 				</div>
+				<span class="dialogTitle">Municipal Report</span>
+				<button class="material-symbols-outlined close">close</button>
+				<div>
+					<div id="gameOverallStatistics">
+						<img id="gameImageStatistics">
+						<span id="elapsedTime">Elapsed Time: <b>0:00</b></span>
+						<span id="totalIncomeGenerated">Total Income Generated: <b>$0</b></span>
+						<span id="totalExpenses">Total Expenses: <b>$0</b></span>
+						<hr>
+						<span id="preLfinalScore">Score: <b>0</b></span>
+					</div>
+					<div id="gameSDGStatistics">
+						<div class="SDGStatHolder">SDG3: Good Health and Well-Being</div>
+						<div class="SDGStatContent" id="SDG3Holder">
+						</div>
+						<div class="SDGStatHolder">SDG6: Clean Water and Sanitation</div>
+						<div class="SDGStatContent" id="SDG6Holder">
+						</div>
+						<div class="SDGStatHolder">SDG7: Affordable and Clean Energy</div>
+						<div class="SDGStatContent" id="SDG7Holder">
+						</div>
+						<div class="SDGStatHolder">SDG9: Industry, Innovation, and Infrastructure</div>
+						<div class="SDGStatContent" id="SDG9Holder">
+						</div>
+						<div class="SDGStatHolder">SDG11: Sustainable Cities and Communites</div>
+						<div class="SDGStatContent" id="SDG11Holder">
+						</div>
+						<div class="SDGStatHolder">SDG12: Responsible Consumption and Production</div>
+						<div class="SDGStatContent" id="SDG12Holder">
+						</div>
+						<div class="SDGStatHolder">SDG13: Climate Action</div>
+						<div class="SDGStatContent" id="SDG13Holder">
+						</div>
+					</div>
+				</div>
+		</dialog>
+		<dialog id="dictionary">
+			<div class="gameColorsBar">
+				<div class="colorBar" style="--color: #4c9e38"></div>
+				<div class="colorBar" style="--color: #25bde2"></div>
+				<div class="colorBar" style="--color: #fbc30a"></div>
+				<div class="colorBar" style="--color: #fe6925"></div>
+				<div class="colorBar" style="--color: #fd9d24"></div>
+				<div class="colorBar" style="--color: #c08b2f"></div>
+				<div class="colorBar" style="--color: #3f7e45"></div>
 			</div>
+			<span class="dialogTitle">Guide</span>
+			<button class="material-symbols-outlined close">close</button>
+		</dialog>
+		<div id="preloader"> 
+			<div class="loader"></div> 
+		</div> 
+		<content id="gameMenu" class="active">
+			<dialog id="gameCredits">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
+				</div>
+				<span class="dialogTitle">Credits</span>
+				<div class="dialogTextHolder">
+					<p>Created by:<a href="https://github.com/JKPotato-Computer">JK_Potato</a>, <a href="https://github.com/JaukG9">JaukG9</a>, <a href="https://github.com/pkoduri14">Praj. K</a>, and <a href="">Anonymous User</a>.</p>
+					<p>Special Thanks to: that one AP® Human Geography teacher!</p>
+					<hr>
+					<p>Graphics sourced from:</p>
+					<ul>
+						<li><a href="https://pixabay.com">PixaBay (Images)</a></li>
+						<li><a href="https://fonts.google.com">Google Fonts (Typeface, Icons)</a></li>
+						<li>All UN assets sourced from <a href="https://www.un.org/sustainabledevelopment">UNSDG Goals</a> under <a href="https://www.un.org/sustainabledevelopment/wp-content/uploads/2019/01/SDG_Guidelines_AUG_2019_Final.pdf">respective guidelines</a></li>
+					</ul>
+				</div>
+				<button class="material-symbols-outlined close">close</button>
+			</dialog>
+			<dialog id="gameAbout">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
+				</div>
+				<span class="dialogTitle">About</span>
+				<div class="dialogTextHolder">
+						<p>soon</p>
+				</div>
+				<button class="material-symbols-outlined close">close</button>
+			</dialog>
+			<div id="backgroundImageHolder"></div>
+			<div id="titleContentHolder">
+				<div id="logoHolder">
+					<img src="img/SDGLabel.png" id="logo">
+					<div>
+						<div class="logoBar"></div>
+						<div class="logoText">THE GAME</div>
+						<div class="logoBar"></div>
+					</div>
+				</div>
 
-			<div id="buttonList">
-				<button id="viewMenu" class="menuButton">Play</button>
-				<button id="credits" class="menuButton">Credits</button>
-				<button id="about" class="menuButton">About</button>
+				<div id="buttonList">
+					<button id="viewMenu" class="menuButton">Play</button>
+					<button id="credits" class="menuButton">Credits</button>
+					<button id="about" class="menuButton">About</button>
+				</div>
+			
+				<span id="disclaimer"><b>DISCLAIMER:</b> The content of this publication has not been approved by the United Nations and does not reflect the views of the United Nations or its officials or Member States.
+					<br>
+					Submission for the <a href="https://gnec-hackathon-2024.devpost.com/">2024 GNEC Hackathon</a>.
+				</span>
 			</div>
-		
-			<span id="disclaimer"><b>DISCLAIMER:</b> The content of this publication has not been approved by the United Nations and does not reflect the views of the United Nations or its officials or Member States.
-				<br>
-				Submission for the <a href="https://gnec-hackathon-2024.devpost.com/">2024 GNEC Hackathon</a>.
-			</span>
-		</content>
-		<content id="gameCredits">
 		</content>
 		<content id="gameOptions">
+			<dialog id="errorLoading">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
+				</div>
+				<span class="dialogTitle">Error: Unavailable</span>
+				<p>This feature is unavailable due to limited time constraints on this project.<br>Check back later!</p>
+				<button class="material-symbols-outlined close">close</button>
+			</dialog>
+			<dialog id="centralPlaceTheory">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
+				</div>
+				<span class="dialogTitle">Central Place Theory</span>
+				<p>
+					This menu design was inspired by the very principles of the Central Place Theory by Walter Christaller, showing the relation of central markets to its hinterland <i>(region of market)</i>. This theory shows the interaction between various villages (smaller hexagons), towns (medium-sized), and cities (center of medium-sized hexagons), and how they interact based off the various ranges, how far people would travel for such services.
+					<br><br>
+					It looks cool though, so that's why its here.
+				</p>
+				<button class="material-symbols-outlined close">close</button>
+			</dialog>
+			
 			<button id="returnTitle" class="material-symbols-outlined">arrow_back</button>
 			<div id="mapSizeSelector">
 				<button id="smallSize" class="material-symbols-rounded">arrow_back_ios</button>
@@ -68,12 +211,12 @@
 					<span class="material-symbols-rounded">play_arrow</span>
 					<span>PLAY</span>
 				</button>
-				<button id="startGame">
+				<button id="settingsBtn">
 					<span class="material-symbols-rounded">settings</span>
 					<span>SETTINGS</span>
 				</button>
 			</div>
-			<button id="funFactBtn">?</button>
+			<button id="funFactBtn">!</button>
 		</content>
 		<content id="gameInterface">
 			<div id="gameStatus">
@@ -130,12 +273,15 @@
 			<div id="gameButtons">
 				<button id="viewAnalytics" class="material-symbols-outlined">
 					monitoring
+					<span class="toolTip">Municipial Report</span>
 				</button>
-				<button id="viewAnalytics" class="material-symbols-outlined">
+				<button id="actionCards" class="material-symbols-outlined">
 					history_edu
+					<span class="toolTip">Action Cards</span>
 				</button>
-				<button id="viewAnalytics" class="material-symbols-outlined">
+				<button id="guides" class="material-symbols-outlined">
 					dictionary
+					<span class="toolTip">Guide</span>
 				</button>
 			</div>
 		</content>

@@ -674,3 +674,22 @@ class Street {
 		}
 	}
 }
+
+// SDG
+
+class SDG {
+	
+	constructor({
+		id = 2
+	} = {}
+	) {
+		
+	}
+}
+
+SDG.prototype.SDGList = {
+	2 : {
+		accessWater : 0,
+		
+	}
+}

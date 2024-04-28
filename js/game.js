@@ -8,19 +8,20 @@ const game = (function() {
 		SDG : {
 			"SDG3" : 10,
 			"SDG6" : 20,
-			"SDG7" : 30,
-			"SDG9" : 40,
-			"SDG11" : 50,
-			"SDG12" : 60,
-			"SDG13" : 70,
 		},
 		SDGDeadline : 0,
-		mapSize : "village",
+		mapSize : "town",
 		
 		gameSpeed : 0,
 		timeElapsed : 0,
 		date : {month : 0,year : 0},
 		dateSwitch : false,
+		
+		trackerData : { // general statistics
+			incomeGain : 0,
+			incomeLost : 0,
+			score: 0
+		}
 	};
 	let inSession = false;
 	let timerInterval;
@@ -58,6 +59,11 @@ const game = (function() {
 			SDGHolder.appendChild(SDGHolderProgress);
 			document.querySelector("#SDGList").appendChild(SDGHolder);
 		}
+		
+		document.querySelector("#elapsedTime").innerHTML = "Time Elapsed: <b>" + String(Math.floor(gameData.timeElapsed / 60)).padStart(2,"0") + ":" + String(gameData.timeElapsed % 60).padStart(2,"0");
+		document.querySelector("#totalIncomeGenerated").innerHTML = "Total Income Generated: <b>$" + gameData.trackerData.incomeGain + "</b>";
+		document.querySelector("#totalExpenses").innerHTML = "Total Expenses: <b>$" + gameData.trackerData.incomeLost + "</b>";
+		
 	}
 	
 	const generateIncome = function() {
@@ -222,6 +228,8 @@ const game = (function() {
 
 					gameData.budget += Math.floor(gameEnum.baseConfig[gameData.mapSize].budget * 0.3);
 					gameData.budget -= gameData.yearlyDue;
+					gameData.trackerData.incomeGain += Math.floor(gameEnum.baseConfig[gameData.mapSize].budget * 0.3);
+					gameData.trackerData.incomeLost += gameData.yearlyDue;
 				
 					if ((gameData.debt > 0) && (gameData.debt - gameData.budget <= 0)) {
 						gameData.debt -= gameData.budget;
@@ -240,6 +248,7 @@ const game = (function() {
 				}
 				
 				let incomeGenerated = generateIncome();
+				gameData.trackerData.incomeGain += incomeGenerated;
 				gameData.yearlyDue += Math.floor(incomeGenerated / 10);
 				
 				gameData.dateSwitch = true;
@@ -277,6 +286,14 @@ const game = (function() {
 		})
 	}
 	
+	document.querySelector("#viewAnalytics").addEventListener("click",() => {
+		document.querySelector("#gameStatistics").showModal();
+	})
+	
+	document.querySelector("#guides").addEventListener("click",() => {
+		document.querySelector("#dictionary").showModal();
+	})
+	
 	const setGameData = function(i,v) {
 		gameData[i] = v;
 	}
@@ -290,23 +307,3 @@ const game = (function() {
 		setGameData : setGameData,
 	};
 })();
-
-const canvas = document.getElementById("gameWorld");
-canvas.height = 1000;
-canvas.width = 1000;
-const ctx = canvas.getContext('2d');
-
-let sX = 100;
-let sY = 100;
-
-function animate(){
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-	ctx.fillStyle = "blue";
-	ctx.fillRect(0,0,sX,sY);
-	
-	sX += 1;
-	sY += 1;
-
-	requestAnimationFrame(animate);
-}
-animate();

@@ -2,23 +2,98 @@
 menu.css - Regarding main menu / title screens
 */
 
-content {
+content:not(.previouslyActive,.active) {
+	display: none;
+}
+
+#modalHolder {
+	z-index: 2;
 	display: none;
 }
 
 content.active {
+	z-index: 1;
 	display: block;
+	animation: contentActive 1.2s ease-out forwards;
+}
+
+content.previouslyActive {
+	z-index: 1;
+	display: block;
+	animation: contentActive2 .7s ease-out forwards;
+}
+@keyframes contentActive2 {
+	from {
+		scale: 1;
+		opacity: 1;
+	}
+	to {
+		scale: 1.05;
+		opacity: 0;
+	}
+}
+
+@keyframes contentActive {
+	from {
+		scale: 1.05;
+		opacity: 0;
+	}
+	to {
+		scale: 1;
+		opacity: 1;
+	}
 }
 
 content#gameMenu {
+	background-image: url("https://pixabay.com/get/gdc13b29b126a86dc12ff7258580efb69e24bbe9507aff37aff61f3bf8e6c62e2cd51f40508cd3ce7d7e0668cd4d07e82.jpg");
+	background-size: cover;
+}
+
+div#titleContentHolder {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	padding: 1.5rem;
+	padding: 1.5rem 2rem;
+	height:100%;
+	width:  max-content;
+	max-width: min-content;
+	background-color: rgba(255,255,255,.8);
+	position: fixed;
+	left: 5rem;
+	animation: flowIn 1s ease-out forwards;
+	overflow: hidden;
 }
 
-content#gameMenu.active {
-	display: flex;
+@keyframes flowIn {
+	from {
+		height: 0;
+	}
+
+	to {
+		height: 100%;
+	}
+}
+
+content#gameMenu.active > div#titleContentHolder,
+content#gameMenu.previouslyActive div#titleContentHolder {
+	display: flex !important;
+}
+
+div#backgroundImageHolder {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	left: 0;
+	top: 0;
+	background-image: url("../img/BGEffect.png");
+	opacity: .15;
+	background-size: cover;
+	background-position: center;
+	animation: imageLoop 2s ease-in-out infinite;
+}
+
+@keyframes imageLoop {
+	50% {scale: 1.02}
 }
 
 #logo {
@@ -28,6 +103,7 @@ content#gameMenu.active {
 #disclaimer {
 	text-align: center;
 	font-size: 12px;
+	width: 325px;
 }
 
 #logoHolder {
@@ -76,7 +152,7 @@ content#gameMenu.active {
 	}
 
 	30% {
-		width: 150px;
+		width: 125px;
 	}
 
 	100% {
@@ -186,11 +262,16 @@ content#gameMenu.active {
 
 #townScale {
 	background-image: url("../img/LightTown.png");
-	display: block;
 }
 
 #villageScale {
 	background-image: url("../img/LightVillage.png");
+}
+
+#cityScale.selected,
+#townScale.selected,
+#villageScale.selected {
+	display: block;
 }
 
 button#returnTitle {
@@ -221,7 +302,7 @@ button#returnTitle:hover {
 	justify-content: center;
 	align-items: center;
 	gap: 4px;
-	padding: 8px 0px;
+	padding: 8px 32px;
 	border-radius: 16px;
 	border: 1px solid gray;
 	background-color: var(--background);
@@ -237,7 +318,7 @@ button#returnTitle:hover {
 	width: 166px;
 	height: 2px;
 	background-color: gray;
-	margin: 6px 24px;
+	margin: 4px 0px;
 }
 
 #demoWarning {
@@ -320,5 +401,146 @@ button#funFactBtn {
 }
 
 button#funFactBtn:hover {
+	scale: 1.2;
+}
+
+#preloader {
+	width: 100%;
+	height: 100%;
+	background-color: var(--background);
+	position: fixed;
+	inset: 0;
+	z-index: 99;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.loader {
+	border: 10px solid var(--primary); /* Loader border color */
+	border-radius: 50%; 
+	width: 175px; 
+    height: 175px;
+	border-top: 10px solid transparent;  
+
+	transition: scale .5s linear;
+	animation: spin 2s linear infinite; 
+}
+
+#preloader.dissapear > .loader {
+	scale: 0;
+}
+  
+@keyframes spin { 
+    0% { transform: rotate(0deg); } 
+    100% { transform: rotate(360deg); } 
+}
+
+#preloader.dissapear {
+	animation: fadeOut .5s forwards ease-out;
+}
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+		scale: 2;
+	}
+}
+
+dialog {
+	overflow: hidden;
+	border: 4px solid #00b8ff;
+	background-color: var(--background);
+	position: fixed;
+	padding: 24px;
+	animation: flyOut .75s ease-out forwards;
+}
+
+dialog::backdrop {
+	background-color: rgb(255,255,255,.25);
+}
+
+dialog[open] {
+	animation: flyIn .75s ease-out forwards;
+}
+
+@keyframes flyIn {
+	from {
+		right: -2rem;
+		opacity: 0;
+	}
+
+	to {
+		right: 0rem;
+		opacity: 1;
+	}
+}
+
+@keyframes flyOut {
+	from {
+		right: 0rem;
+		opacity: 1;
+	}
+	
+	to {
+		right: -2rem;
+		opacity: 0;
+	}
+}
+
+#gameCredits,#gameAbout {
+	margin-right: 4rem;
+	width: 40%;
+	height: 45%;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.dialogTitle {
+	font-weight: bold;
+	font-size: 28px;
+	font-family: Roboto Condensed;
+}
+
+.dialogTextHolder {
+	background-color: rgB(255,255,255);
+	padding: .75rem;
+	margin: .5rem 0 0 0;
+	height: 87%;
+	border: 1px solid gray;
+	overflow: auto;
+}
+
+.gameColorsBar {
+	width: 98%;
+	position: absolute;
+	height: 8px;
+	left: 50%;
+	transform: translateX(-50%);
+	top: 6px;
+	background: black;
+	display: flex;
+	flex-direction: row;
+}
+
+.colorBar {
+	width: calc(100% / 7);
+	height: 100%;
+	background: var(--color);
+}
+
+.close {
+	position: absolute;
+	right: 20px;
+	background: none;
+	top: 24px;
+	font-size: 32px;
+}
+
+.close:hover {
 	scale: 1.2;
 }
