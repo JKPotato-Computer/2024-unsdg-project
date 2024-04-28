@@ -45,7 +45,7 @@ content.previouslyActive {
 }
 
 content#gameMenu {
-	background-image: url("https://pixabay.com/get/gdc13b29b126a86dc12ff7258580efb69e24bbe9507aff37aff61f3bf8e6c62e2cd51f40508cd3ce7d7e0668cd4d07e82.jpg");
+	background-image: url("../img/SDGTitleBG.jpg");
 	background-size: cover;
 }
 
