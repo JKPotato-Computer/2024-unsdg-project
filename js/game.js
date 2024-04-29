@@ -329,7 +329,7 @@ const game = (function() {
 		newButton.className = "actionCardHolder";
 		
 		const ACIcon = document.createElement("div");
-		AIcon.clasName = "ACIconHolder material-symbols-outlined";
+		ACIcon.clasName = "ACIconHolder material-symbols-outlined";
 		ACIcon.textContent = cardInfo.icon;
 		
 		const ACContent = document.createElement("div");
@@ -337,6 +337,30 @@ const game = (function() {
 		
 		const ACTitle = document.createElement("span");
 		ACTitle.className = "ACTitle";
+		ACTitle.textContent = type;
+		
+		const ACRequirements = document.createElement("span");
+		ACRequirements.className = "ACRequirements";
+		ACRequirements.textContent = "* Required: " + cardInfo.required;
+		
+		const hr = document.createElement("hr");
+		
+		const ACDescription = document.createElement("span");
+		ACDescription.clasName = "ACDescription";
+		ACDescription.textContent = cardInfo.description;
+		
+		const ACKeys = document.createElement("span");
+		ACKeys.clasName = "ACKeys";
+		ACKeys.innerHTML = cardInfo.cost + " UND" + (cardInfo.oneTime) ? ("<b>(ONE TIME PURCHASE)</b>") : ("");
+		
+		newButton.appendChild(ACIcon);
+		newButton.appendChild(ACContent);
+		ACContent.appendChild(ACTitle);
+		ACContent.appendChild(ACRequirements);
+		ACContent.appendChild(hr);
+		ACContent.appendChild(ACDescription);
+		ACContent.appendChild(ACKeys);
+		document.querySelector("#" + cardInfo.type).appendChild(newButton);
 		
 	}
 	
