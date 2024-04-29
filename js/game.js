@@ -329,8 +329,14 @@ const game = (function() {
 		newButton.className = "actionCardHolder";
 		
 		const ACIcon = document.createElement("div");
-		
+		AIcon.clasName = "ACIconHolder material-symbols-outlined";
 		ACIcon.textContent = cardInfo.icon;
+		
+		const ACContent = document.createElement("div");
+		ACContent.className = "ACContent";
+		
+		const ACTitle = document.createElement("span");
+		ACTitle.className = "ACTitle"
 	}
 	
 	return {
