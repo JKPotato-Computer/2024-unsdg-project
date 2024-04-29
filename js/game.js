@@ -317,6 +317,10 @@ const game = (function() {
 				if (gameData.date.month == 11) {
 					gameData.date.month = 0;
 					gameData.date.year++;
+					
+					// SDG Progress Check:
+					// Check to see if each SDG requirement is met, if is calculate by Met / Total for progress
+					// (for tmr)
 
 					gameData.budget += Math.floor(gameEnum.baseConfig[gameData.mapSize].budget * 0.3);
 					gameData.budget -= gameData.yearlyDue;
