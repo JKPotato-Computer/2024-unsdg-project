@@ -462,15 +462,15 @@ Zone.prototype.zoneTypes = {
 		isDestroyable : true,
 		canGenerateRoad : true,
 		isCommercial : false, // to prevent connection,
-		pollutionZone: 2
+		pollutionZone: 2,
 		
 		incomeGenerate : 2500,
 		incomeBoost : 0,
-		yearlyCost, 2000
+		yearlyCost: 2000,
 		
 		carbonEmissions : 0.6,
 		wasteEmissions : 0.6
-	}
+	},
 	offices : {
 		width: 1,
 		height: 2,
