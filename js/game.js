@@ -5,14 +5,11 @@ const game = (function() {
 		budget : 0,
 		yearlyDue : 0,
 		debt : 0,
-		SDG : {
-			"SDG3" : 10,
-			"SDG6" : 20,
-		},
+		SDG : [],
 		SDGDeadline : 0,
 		mapSize : "town",
 		
-		gameSpeed : 0,
+		gameSpeed : 1,
 		timeElapsed : 0,
 		date : {month : 0,year : 0},
 		dateSwitch : false,
@@ -21,7 +18,15 @@ const game = (function() {
 			incomeGain : 0,
 			incomeLost : 0,
 			score: 0
-		}
+		},
+		
+		playedActionCards : {
+			
+		},
+		
+		interestDebt : 0,
+		
+		households : 0,
 	};
 	let inSession = false;
 	let timerInterval;
@@ -47,13 +52,17 @@ const game = (function() {
 			document.querySelector("#SDGList").removeChild(document.querySelector("#SDGList").lastChild);
 		}
 		
-		for (const SDG of Object.keys(gameData.SDG)) {
+		for (const SDG of gameData.SDG) {
+			if (!SDG.active) {
+				continue;
+			}
+			
 			const SDGHolder = document.createElement("div");
-			SDGHolder.className = "SDGHolder " + SDG;
+			SDGHolder.className = "SDGHolder SDG" + SDG.id;
 			
 			const SDGHolderProgress = document.createElement("progress");
 			SDGHolderProgress.max = "100";
-			SDGHolderProgress.value = String(gameData.SDG[SDG]);
+			SDGHolderProgress.value = SDG.progress;
 			SDGHolderProgress.className = "SDGProgress";
 			
 			SDGHolder.appendChild(SDGHolderProgress);
@@ -93,19 +102,32 @@ const game = (function() {
 		
 		return income;
 	}
+	
+	const placePropertyAtRandomLocation = function(property) {
+		const newProperty = new Zone();
+		newProperty.appendZone(property);
+		let rX = getRandomIntInclusive(0,gameData.districtPropertyData.length);
+		let rY = getRandomIntInclusive(0,gameData.districtPropertyData.length);
+		
+		do {
+			rX = getRandomIntInclusive(0,gameData.districtPropertyData.length);
+			rY = getRandomIntInclusive(0,gameData.districtPropertyData.length);
+		} while (!newProperty.placeZone(gameData.districtPropertyData,rX,rY));
+		return property;
+	}
+	
+	const getSDGById = function(id) {
+		for (const sdg of gameData.SDG) {
+				if (sdg.id == id) {
+					return sdg;
+				}
+			}
+	}
 
 	const generateRandomProperties = function() {
 		for (const property of Object.keys(gameEnum.baseProperties[gameData.mapSize])) {
 			for (let i = 0;i < gameEnum.baseProperties[gameData.mapSize][property];i++) {
-				const newProperty = new Zone();
-				newProperty.appendZone(property);
-				let rX = getRandomIntInclusive(0,gameData.districtPropertyData.length);
-				let rY = getRandomIntInclusive(0,gameData.districtPropertyData.length);
-				
-				do {
-					rX = getRandomIntInclusive(0,gameData.districtPropertyData.length);
-					rY = getRandomIntInclusive(0,gameData.districtPropertyData.length);
-				} while (!newProperty.placeZone(gameData.districtPropertyData,rX,rY));
+				placePropertyAtRandomLocation(property);
 			}
 		}
 		
@@ -177,6 +199,35 @@ const game = (function() {
 		
 		gameData.budget = gameEnum.baseConfig[gameData.mapSize].budget;
 		gameData.yearlyDue = gameEnum.baseConfig[gameData.mapSize].yearlyDue;
+		gameData.households = (gameEnum.baseProperties[gameData.mapSize].neighborhood * 2000) + (gameEnum.baseProperties[gameData.mapSize].apartment * 4000 || 0);
+		
+		const checkRepeatingSDG = function(id) {
+			for (const sdg of gameData.SDG) {
+				if ((sdg.id == id) && (sdg.active == true)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		for (const sdg of Object.keys(SDG.prototype.SDGList)) {
+			let newSDG = new SDG();
+			newSDG.id = sdg;
+			newSDG.appendRequirements(gameData.mapSize,gameData.households);
+			gameData.SDG.push(newSDG);
+		}
+		
+		for (let i =0;i<2;i++) {
+			let SDGList = Object.keys(SDG.prototype.SDGList);
+			let randomSDG = SDGList[getRandomIntInclusive(0,SDGList.length-1)];
+			while (checkRepeatingSDG(randomSDG) == true) {
+				randomSDG = SDGList[getRandomIntInclusive(0,SDGList.length-1)];
+			}
+
+			let selectedSDG = getSDGById(randomSDG);
+			selectedSDG.active = true;
+			
+		}
 		
 		refreshUI();
 		timerInterval = setInterval(updateTimer,1000 / gameData.gameSpeed);
@@ -202,6 +253,47 @@ const game = (function() {
 				gameData.streetPropertyData[x][y].upgrades = {}; // bus stop, bike lane, BRT, etc.
 			}
 		}
+	}
+	
+	const buyActionCard = function(cost) {
+		if (gameData.budget - cost < 0) {
+			let remaining = cost - gameData.budget;
+			gameData.budget = 0;
+			gameData.debt += remaining;
+			gameData.interestDebt += remaining;
+		} else {
+			gameData.budget -= cost;
+		}
+	}
+	
+	const playActionCard = function(card) {
+		let realCard = SDG.prototype.actionCardList[card];
+		
+		if (realCard.oneTime) {
+			if (gameData.playedActionCards[card]) {
+				return;
+			}
+		}
+		
+		buyActionCard(realCard.cost);
+		switch (card) {
+			case "Improve Water Pipeline":
+				gameData.playedActionCards[card] = realCard;
+				break;
+			case "Build Water Stations":
+				placePropertyAtRandomLocation("waterStation");
+				getSDGById(6).base.numWater += 5;
+				break;
+			case "Build Restrooms":
+				placePropertyAtRandomLocation("restrooms");
+				getSDGById(6).base.numRestrooms += Math.floor(gameData.households * 0.1);
+				break;
+			case "Improve Filtration System":
+				gameData.playedActionCards[card] = realCard;
+				break;
+		}
+		
+		console.log(gameData.districtPropertyData);
 	}
 	
 	const getGameData = function() {
@@ -242,10 +334,30 @@ const game = (function() {
 							}
 						}
 					}
+					gameData.budget -= yearlyLost;
 				
-					if ((gameData.debt > 0) && (gameData.debt - gameData.budget <= 0)) {
-						gameData.debt -= gameData.budget;
-						gameData.budget = 0;
+					if ((gameData.debt > 0)) {
+						let budget = gameData.budget;
+						gameData.budget -= gameData.debt;
+						gameData.debt -= budget;
+						gameData.interestDebt -= budget;
+						if (gameData.budget < 0) {
+							gameData.budget = Math.abs(gameData.budget);
+						}
+						
+						if (gameData.debt < 0) {
+							gameData.debt = 0;
+						}
+						
+						if (gameData.interestDebt < 0) {
+							gameData.interestDebt = 0;
+						}
+					}
+				
+					
+					if (gameData.interestDebt > 0) {
+						gameData.interestDebt *= 2;
+						gameData.debt += gameData.interestDebt;
 					}
 				
 					gameData.yearlyDue = Math.floor(gameEnum.baseConfig[gameData.mapSize].yearlyDue * (1.001 * Math.floor(gameData.timeElapsed / 60)));
@@ -329,7 +441,7 @@ const game = (function() {
 		newButton.className = "actionCardHolder";
 		
 		const ACIcon = document.createElement("div");
-		ACIcon.clasName = "ACIconHolder material-symbols-outlined";
+		ACIcon.className = "ACIconHolder material-symbols-outlined";
 		ACIcon.textContent = cardInfo.icon;
 		
 		const ACContent = document.createElement("div");
@@ -346,12 +458,12 @@ const game = (function() {
 		const hr = document.createElement("hr");
 		
 		const ACDescription = document.createElement("span");
-		ACDescription.clasName = "ACDescription";
+		ACDescription.className = "ACDescription";
 		ACDescription.textContent = cardInfo.description;
 		
 		const ACKeys = document.createElement("span");
-		ACKeys.clasName = "ACKeys";
-		ACKeys.innerHTML = cardInfo.cost + " UND" + (cardInfo.oneTime) ? ("<b>(ONE TIME PURCHASE)</b>") : ("");
+		ACKeys.className = "ACKeys";
+		ACKeys.innerHTML = cardInfo.cost + " UND" + ((cardInfo.oneTime) ? (" <b>(ONE TIME PURCHASE)</b>") : (""));
 		
 		newButton.appendChild(ACIcon);
 		newButton.appendChild(ACContent);
@@ -362,6 +474,10 @@ const game = (function() {
 		ACContent.appendChild(ACKeys);
 		document.querySelector("#" + cardInfo.type).appendChild(newButton);
 		
+		newButton.addEventListener("click", () => {
+			document.querySelector("#actionCards").close();
+			playActionCard(type);
+		})
 	}
 	
 	return {

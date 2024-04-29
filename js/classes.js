@@ -1,3 +1,9 @@
+const getRandomIntInclusive = function(min, max) {
+	const minCeiled = Math.ceil(min);
+	const maxFloored = Math.floor(max);
+	return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+}
+
 // Game Data Properties
 const gameEnum = (function() {
 	const baseProperties = {
@@ -62,11 +68,11 @@ const gameEnum = (function() {
 	const baseConfig = {
 		village: {
 			budget : 20000,
-			yearlyDue : 5000
+			yearlyDue : 5000,
 		},
 		town: {
 			budget : 200000,
-			yearlyDue : 20000
+			yearlyDue : 20000,
 		},
 		city: {
 			budget : 20000,
@@ -621,6 +627,36 @@ Zone.prototype.zoneTypes = {
 		
 		wasteEmissions: 0.2,
 		carbonEmissions: 0
+	},
+	waterStation : {
+		influence: 0,
+		type: "waterStation",
+		color: "#0000ff",
+		
+		canGenerateRoad: false,
+		isCommercial : true,
+		isDestroyable: false,
+		
+		incomeGenerate: 300,
+		yearlyCost: 700,
+		
+		wasteEmissions: 0.6,
+		carbonEmissions: 0.2
+	},
+	restrooms : {
+		influence: 1,
+		type : "restrooms",
+		color: "#fffff",
+		
+		canGenerateRoad: false,
+		isCommercial : true,
+		isDestroyable: false,
+		
+		incomeGenerate : 200,
+		yearlyCost: 50,
+		
+		wasteEmissions: .9,
+		carbonEmissions: 0
 	}
 }
 
@@ -750,18 +786,112 @@ class SDG {
 	
 	constructor({
 		id = 0,
+		base = {},
 		requirements = {},
-		progress = 0
+		progress = 0,
+		active = false
 	} = {}
 	) {
+		this.id = id;
+		this.base = base;
+		this.requirements = requirements;
+		this.progress = progress;
+		this.active = active;
+	}
+	
+	appendRequirements(mapSize,households) {
+		console.log(households);
+		for (const item of Object.keys(SDG.prototype.SDGList[this.id][mapSize])) {
+			let rule = SDG.prototype.SDGList[this.id][mapSize][item];
+			if (typeof rule === "string") {
+				rule = rule.split("-");
+				switch (rule[0]) {
+					case "households":
+						if (rule[1]) {
+							this.base[item] = (households * parseFloat(rule[1]));
+						} else {
+							this.base[item] = households
+						}
+						break;
+					case "random":
+						this.base[item] = getRandomIntInclusive(parseInt(rule[1]),parseInt(rule[2]));
+						break;
+					default:
+						this.base[item] = parseFloat(rule[0]);
+				}
+			} else if (typeof rule === "boolean") {
+				this.base[item] = rule;
+			}
+		}
 		
+		for (const item of Object.keys(SDG.prototype.SDGGoal[this.id][mapSize])) {
+			let rule = SDG.prototype.SDGGoal[this.id][mapSize][item];
+			if (typeof rule !== "boolean") {
+				switch (rule[1]) {
+					case "households":
+						rule[1] = households;
+						break;
+					case "households*2":
+						rule[1] = households * 2;
+						break;
+				}
+			}
+			
+			this.requirements[item] = rule;
+		}
+	}
+	
+	meetsRequirement(requirement) {
+		switch (this.requirements[requirement][0]) {
+			case ">":
+				return this.base[requirement] >= this.requirements[requirement][1];
+				break;
+			case "=":
+				return this.base[requirement] == this.requirements[requirement][1];
+				break;
+			case "<":
+				return this.base[requirement] <= this.requirements[requirement][1];
+				break;
+		}
+		return false;
 	}
 }
 
 SDG.prototype.SDGList = {
 	6 : {
-		accessWater : 0,
-		
+		town : {
+			numAccessWater : "households-0.2",
+			numRestrooms : "households-0.4",
+			numWater : "random-20-30",
+			waterPollution : "random-1900-2000",
+		}
+	},
+	7 : {
+		town : {
+			energyCost: "random-17-20",
+			accessEnergy : "households-0.5",
+			energySustainable : false,
+			modernEnergy : true
+		}
+	}
+}
+
+SDG.prototype.SDGGoal = {
+	6 : {
+		town : {
+			numAccessWater : [">","households"],
+			numRestrooms : [">","households*2"],
+			numWater : [">",50],
+			waterPollution : ["<",1000],
+		}
+	},
+	7 : {
+		town : {
+			energyCost : ["<",11],
+			accessEnergy : [">","households"],
+			energySustainable : true,
+			modernEnergy : true,
+		}
 	}
 }
 
@@ -770,7 +900,7 @@ SDG.prototype.actionCardList = {
 		cost : 50000,
 		oneTime : true,
 		description : "Create a new Bus Rapid Tranist service for nearby residents.",
-		requires : "None",
+		required : "None",
 		type : "transportation",
 		icon: "directions_bus"
 	},
@@ -786,7 +916,7 @@ SDG.prototype.actionCardList = {
 		cost : 20000,
 		oneTime : true,
 		description : "Upgrade the existing service to an electric service.",
-		requires : "BRT Service, 3 Bus Stops",
+		required : "BRT Service, 3 Bus Stops",
 		type : "transportation",
 		icon : "bolt"
 	},
@@ -802,7 +932,7 @@ SDG.prototype.actionCardList = {
 		cost : 3000,
 		oneTime : true,
 		description : "Improve the existing water pipeline system for ALL residents.",
-		requires : "None",
+		required : "None",
 		type : "water",
 		icon : "valve"
 	},
@@ -818,7 +948,7 @@ SDG.prototype.actionCardList = {
 		cost : 2000,
 		oneTime : false,
 		description : "Creates 2 restrooms nearby some residential and commercial zones.",
-		requires : "Improve Water Pipeline",
+		required : "Improve Water Pipeline",
 		type : "water",
 		icon : "wc"
 	},
@@ -834,7 +964,7 @@ SDG.prototype.actionCardList = {
 		cost : 0,
 		oneTime : true,
 		description : "Implement bill to reduce energy costs and allow access to more people.",
-		requires : "None",
+		required : "None",
 		type : "acts",
 		icon: "bookmark"
 	},
@@ -850,7 +980,7 @@ SDG.prototype.actionCardList = {
 		cost : 0,
 		oneTime : false,
 		description : "Create a new basic factory that generates 2500 UND per month.",
-		requires : "None",
+		required : "None",
 		type : "manufacturing",
 		icon: "factory"
 	},
@@ -866,7 +996,7 @@ SDG.prototype.actionCardList = {
 		cost : 20000,
 		oneTime : true,
 		description : "Create a recycling center at a random location.",
-		requires : "None",
+		required : "None",
 		type : "manufacturing",
 		icon : "recycling"
 	},
@@ -882,7 +1012,7 @@ SDG.prototype.actionCardList = {
 		cost : 0,
 		oneTime : true,
 		description : "Encourage peace with one another through flyers.",
-		requires : "None",
+		required : "None",
 		type : "social",
 		icon: "favorite"
 	},
@@ -898,7 +1028,7 @@ SDG.prototype.actionCardList = {
 		cost : 0,
 		oneTime : true,
 		description : "Need quick money? We have 20000 UND for you!",
-		requires : "None",
+		required : "None",
 		type : "social",
 		icon: "medical_services"
 	},

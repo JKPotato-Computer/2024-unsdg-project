@@ -44,26 +44,6 @@
 			<div>
 				<span class="categoryTitle">Transportation</span>
 				<div class="categoryHolder" id="transportation">
-					<button class="actionCardHolder" id="addBRTService">
-						<div class="ACIconHolder material-symbols-outlined">directions_bus</div>
-						<div class="ACContent">
-							<span class="ACTitle">Add BRT Service</span>
-							<span class="ACRequirements">* Requires: None</span>
-							<hr>
-							<span class="ACDescription">Create a new Bus Rapid Tranist service for nearby residents.</span>
-							<span class="ACKeys">50,000 UND <b>(ONE TIME PURCHASE)</b></span>
-						</div>
-					</button>
-					<button class="actionCardHolder" id="addBusStop">
-						<div class="ACIconHolder material-symbols-outlined">hail</div>
-						<div class="ACContent">
-							<span class="ACTitle">Add Bus Stop</span>
-							<span class="ACRequirements">* Requires: BRT Service</span>
-							<hr>
-							<span class="ACDescription">Create a new bus stop! (Note: Generates on a random street, you don't get to pick.)</span>
-							<span class="ACKeys">2,000 UND</span>
-						</div>
-					</button>
 				</div>
 				<span class="categoryTitle">Water Service</span>
 				<div class="categoryHolder" id="water">
@@ -291,7 +271,7 @@
 							<span class="currencyTitle">DUE (this year)</span>
 							<span class="material-symbols-outlined currencyIcon">receipt_long</span>
 						</div>
-						<div class="currencyHolder debtHolder">
+						<div class="currencyHolder debtHolder" style="display: none;">
 							<span id="gameDebtValue" class="currencyText">10000</span>
 							<span class="currencyTitle">DEBT</span>
 							<span class="material-symbols-outlined currencyIcon">priority_high</span>
@@ -303,12 +283,6 @@
 						<span>DEADLINE FOR SDG: <b>4m 20s</b></span>
 					</div>
 					<div id="SDGList">
-						<div class="SDGHolder SDG6">
-							<progress class="SDGProgress" value="10" max="100">10%</progress>
-						</div>
-						<div class="SDGHolder SDG3">
-							<progress class="SDGProgress" value="50" max="100">50%</progress>
-						</div>
 					</div>
 				</div>
 				<div>
