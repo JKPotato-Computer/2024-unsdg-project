@@ -138,6 +138,8 @@ class Zone {
 		wasteEmissions = 0,
 		
 		id = 0,
+		text = "",
+		color = ""
 	} = {}
 	) {
 		this.height = height;
@@ -156,6 +158,9 @@ class Zone {
 		
 		this.carbonEmissions = carbonEmissions;
 		this.wasteEmissions = wasteEmissions;
+
+		this.color = color;
+		this.text = text;
 
 		if ((id == 0) || (!id)) {
 			this.id = Math.floor(Math.random() * 10000000)
@@ -419,7 +424,8 @@ Zone.prototype.zoneTypes = {
 		incomeBoost : 0.50,
 
 		carbonEmissions : 0.2,
-		wasteEmissions : 0.2
+		wasteEmissions : 0.2,
+		text: "house"
 	},
 	gasStation : {
 		height: 1,
@@ -432,7 +438,8 @@ Zone.prototype.zoneTypes = {
 		incomeBoost : 0,
 
 		carbonEmissions : 0.5,
-		wasteEmissions : 0.1
+		wasteEmissions : 0.1,
+		text : "local_gas_station"
 	},
 	groceryStore : {
 		height: 2,
@@ -445,7 +452,8 @@ Zone.prototype.zoneTypes = {
 		incomeBoost : 0,
 
 		carbonEmissions : 0.2,
-		wasteEmissions : 0.4
+		wasteEmissions : 0.4,
+		text : "grocery"
 	},
 	residentialPark : {
 		width: 2,
@@ -459,7 +467,8 @@ Zone.prototype.zoneTypes = {
 		incomeBoost : 0,
 
 		carbonEmissions : 0,
-		wasteEmissions : 0.1
+		wasteEmissions : 0.1,
+		text : "park"
 	},
 	factory : {
 		type : "factory",
@@ -475,7 +484,8 @@ Zone.prototype.zoneTypes = {
 		yearlyCost: 2000,
 		
 		carbonEmissions : 0.6,
-		wasteEmissions : 0.6
+		wasteEmissions : 0.6,
+		text : "manufacturing"
 	},
 	offices : {
 		width: 1,
@@ -489,6 +499,7 @@ Zone.prototype.zoneTypes = {
 		
 		carbonEmissions : 0.3,
 		wasteEmissions : 0.3,
+		text : "meeting_room"
 	},
 	commercialStore : {
 		width: 2,
@@ -501,7 +512,8 @@ Zone.prototype.zoneTypes = {
 		incomeBoost : 0,
 		
 		carbonEmissions : 0.2,
-		wasteEmissions : 0.1
+		wasteEmissions : 0.1,
+		text : "shopping_cart"
 	},
 	school : {
 		width: 3,
@@ -514,7 +526,8 @@ Zone.prototype.zoneTypes = {
 		incomeBoost : 0,
 		
 		carbonEmissions : 0.3,
-		wasteEmissions : 0.3
+		wasteEmissions : 0.3,
+		text : "school"
 	},
 	stateRoute : {
 		type : "stateRoute",
@@ -523,6 +536,7 @@ Zone.prototype.zoneTypes = {
 
 		incomeGenerate : 50,
 		carbonEmissions : 0.1,
+		text : ""
 	},
 	cbd : {
 		type : "cbd",
@@ -531,6 +545,7 @@ Zone.prototype.zoneTypes = {
 
 		incomeGenerate : 1000,
 		incomeBoost : 10,
+		text : "location_city"
 	},
 	commercialMall : {
 		height: 4,
@@ -541,7 +556,8 @@ Zone.prototype.zoneTypes = {
 		incomeGenerate: 2000,
 		
 		wasteEmissions: 0.3,
-		carbonEmissions: 0.3
+		carbonEmissions: 0.3,
+		text: "local_mall"
 	},
 	fastFoodChain : {
 		influence: 3,
@@ -550,7 +566,8 @@ Zone.prototype.zoneTypes = {
 		incomeGenerate : 600,
 		
 		wasteEmissions : 0.2,
-		carbonEmissions : 0.2
+		carbonEmissions : 0.2,
+		text: "fastfood"
 	},
 	restaurant: {
 		influence: 2,
@@ -559,7 +576,8 @@ Zone.prototype.zoneTypes = {
 		incomeGenerate : 800,
 		
 		wasteEmissions: 0.5,
-		carbonEmissions : 0.1
+		carbonEmissions : 0.1,
+		text: "restaurant"
 	},
 	apartment: {
 		influence: 3,
@@ -576,7 +594,8 @@ Zone.prototype.zoneTypes = {
 		incomeBoost: 1,
 		
 		wasteEmissions: 0.4,
-		carbonEmissions: 0.3
+		carbonEmissions: 0.3,
+		text: "apartment"
 	},
 	policeStation: {
 		influence: 2,
@@ -592,7 +611,8 @@ Zone.prototype.zoneTypes = {
 		incomeBoost: 0,
 		
 		wasteEmissions: 0.2,
-		carbonEmissions: 0.2
+		carbonEmissions: 0.2,
+		text: "local_police"
 	},
 	brt: {
 		influence: 2,
@@ -611,7 +631,8 @@ Zone.prototype.zoneTypes = {
 		yearlyCost: 3000,
 		
 		wasteEmissions: 0,
-		carbonEmissions:  0.4
+		carbonEmissions:  0.4,
+		text: "directions_bus"
 	},
 	highTechFactory : {
 		influence: 6,
@@ -626,7 +647,8 @@ Zone.prototype.zoneTypes = {
 		yearlyCost: 20000,
 		
 		wasteEmissions: 0.2,
-		carbonEmissions: 0
+		carbonEmissions: 0,
+		text: "conveyor_belt"
 	},
 	waterStation : {
 		influence: 0,
@@ -641,23 +663,9 @@ Zone.prototype.zoneTypes = {
 		yearlyCost: 700,
 		
 		wasteEmissions: 0.6,
-		carbonEmissions: 0.2
+		carbonEmissions: 0.2,
+		text: "water_drop"
 	},
-	restrooms : {
-		influence: 1,
-		type : "restrooms",
-		color: "#fffff",
-		
-		canGenerateRoad: false,
-		isCommercial : true,
-		isDestroyable: false,
-		
-		incomeGenerate : 200,
-		yearlyCost: 50,
-		
-		wasteEmissions: .9,
-		carbonEmissions: 0
-	}
 }
 
 // Street
@@ -861,7 +869,6 @@ SDG.prototype.SDGList = {
 	6 : {
 		town : {
 			numAccessWater : "households-0.2",
-			numRestrooms : "households-0.4",
 			numWater : "random-20-30",
 			waterPollution : "random-1900-2000",
 		}
@@ -880,7 +887,6 @@ SDG.prototype.SDGGoal = {
 	6 : {
 		town : {
 			numAccessWater : [">","households"],
-			numRestrooms : [">","households*2"],
 			numWater : [">",50],
 			waterPollution : ["<",1000],
 		}
@@ -943,14 +949,6 @@ SDG.prototype.actionCardList = {
 		required : "Improve Water Pipeline",
 		type : "water",
 		icon : "water_drop"
-	},
-	"Build Restrooms" : {
-		cost : 2000,
-		oneTime : false,
-		description : "Creates 2 restrooms nearby some residential and commercial zones.",
-		required : "Improve Water Pipeline",
-		type : "water",
-		icon : "wc"
 	},
 	"Improve Filtration System" : {
 		cost : 20000,

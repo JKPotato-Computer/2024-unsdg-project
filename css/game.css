@@ -9,10 +9,13 @@ content#gameInterface * {
 }
 
 canvas#gameWorld {
-    position: fixed;
-    z-index: -1;
-    inset: 0;
-    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid black;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 div#gameStatus {
@@ -427,15 +430,32 @@ iframe {
 	font-family: Roboto Condensed;
 }
 
-#notification {
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	top: 5vh;
-	z-index: 10;
+#notificationHolder {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 5vh;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: max-content;
+    align-items: center;
+}
+
+.notification {
 	background: white;
 	padding: 1vh;
 	width: max-content;
-	max-width: 60%;
 	height: max-content;
+	opacity: 0;
+	transition: .5s ease-in-out;
+}
+
+.notification.visible {
+    opacity: 1;
+}
+
+.notification.invisible {
+    opacity: 0;
 }

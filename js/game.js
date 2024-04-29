@@ -140,6 +140,21 @@ const game = (function() {
 		4) Pathfind a road from that item to a nearby road, business, or state route.
 		*/
 	}
+
+	const notify = function(notification,time) {
+		const notifElement = document.createElement("div");
+		notifElement.textContent = notification;
+		notifElement.className = "notification visible";
+		document.querySelector("#notificationHolder").appendChild(notifElement);
+
+		setTimeout(function() {
+			notifElement.className = "notification invisible";
+		},time);
+
+		setTimeout(function() {
+			notifElement.remove();
+		},time + 500);
+	}
 	
 	const setupMap = function() {
 		createPropertyGrid(gameEnum.mapSizes[gameData.mapSize]);
@@ -188,6 +203,8 @@ const game = (function() {
 				}
 			}
 		}
+
+		canvasThingy.generateBuildingthitruifghoird();
 		
 		const date = new Date();
 		gameData.date.month = date.getMonth();
@@ -274,24 +291,25 @@ const game = (function() {
 				return;
 			}
 		}
-		
-		buyActionCard(realCard.cost);
+
 		switch (card) {
 			case "Improve Water Pipeline":
 				gameData.playedActionCards[card] = realCard;
 				break;
 			case "Build Water Stations":
+				if (!gameData.playedActionCards[card]) {
+					return;
+				}
+
 				placePropertyAtRandomLocation("waterStation");
 				getSDGById(6).base.numWater += 5;
-				break;
-			case "Build Restrooms":
-				placePropertyAtRandomLocation("restrooms");
-				getSDGById(6).base.numRestrooms += Math.floor(gameData.households * 0.1);
 				break;
 			case "Improve Filtration System":
 				gameData.playedActionCards[card] = realCard;
 				break;
 		}
+
+		buyActionCard(realCard.cost);
 		
 		console.log(gameData.districtPropertyData);
 	}
@@ -320,7 +338,18 @@ const game = (function() {
 					
 					// SDG Progress Check:
 					// Check to see if each SDG requirement is met, if is calculate by Met / Total for progress
-					// (for tmr)
+					
+					for (const sdg of gameData.SDG) {{
+						let progress = 0;
+						let totalItems = sdg.requirements.length;
+						for (const goal of Object.keys(sdg.requirements)) {
+							if (sdg.meetsRequirement(goal)) {
+								progress += (1 / totalItems);
+							}
+						}
+						sdg.progress = progress;
+					}}
+
 
 					gameData.budget += Math.floor(gameEnum.baseConfig[gameData.mapSize].budget * 0.3);
 					gameData.budget -= gameData.yearlyDue;
@@ -491,5 +520,6 @@ const game = (function() {
 		generateRandomProperties : generateRandomProperties,
 		getGameData : getGameData,
 		setGameData : setGameData,
+		notify : notify
 	};
 })();
