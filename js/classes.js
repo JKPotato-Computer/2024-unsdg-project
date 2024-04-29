@@ -9,7 +9,8 @@ const gameEnum = (function() {
 			factory : 3,
 			offices : 2,
 			school : 1,
-			commercialStore : 1
+			commercialStore : 1,
+			policeStation: 1
 		},
 		
 		town : {
@@ -23,7 +24,8 @@ const gameEnum = (function() {
 			residentialPark : 4,
 			factory : 5,
 			school: 2,
-			offices: 3
+			offices: 3,
+			policeStation: 1
 		},
 		
 		city : {
@@ -40,7 +42,8 @@ const gameEnum = (function() {
 			apartment : 4,
 			residentialPark : 4,
 			groceryStore : 3,
-			gasStation : 6
+			gasStation : 6,
+			policeStation: 2
 		}
 	}
 	
@@ -458,14 +461,16 @@ Zone.prototype.zoneTypes = {
 		influence : 4.5,
 		isDestroyable : true,
 		canGenerateRoad : true,
-		isCommercial : false, // to prevent connection
+		isCommercial : false, // to prevent connection,
+		pollutionZone: 2
 		
-		incomeGenerate : 1000,
+		incomeGenerate : 2500,
 		incomeBoost : 0,
+		yearlyCost, 2000
 		
 		carbonEmissions : 0.6,
 		wasteEmissions : 0.6
-	},
+	}
 	offices : {
 		width: 1,
 		height: 2,
@@ -566,6 +571,56 @@ Zone.prototype.zoneTypes = {
 		
 		wasteEmissions: 0.4,
 		carbonEmissions: 0.3
+	},
+	policeStation: {
+		influence: 2,
+		type: "policeStation",
+		color: "##0000c2",
+		height: 1,
+		width: 2,
+		canGenerateRoad : false,
+		isCommercial: false,
+		isDestroyable: false,
+		
+		incomeGenerate: 200,
+		incomeBoost: 0,
+		
+		wasteEmissions: 0.2,
+		carbonEmissions: 0.2
+	},
+	brt: {
+		influence: 2,
+		type: "brt",
+		color: "#eaffcf",
+		height: 1,
+		width: 1,
+		
+		canGenerateRoad: false,
+		isCommercial: true,
+		isDestroyable: false,
+		isElectric: false,
+		
+		incomeGenerate: 600,
+		incomeBoost: 0,
+		yearlyCost: 3000,
+		
+		wasteEmissions: 0,
+		carbonEmissions:  0.4
+	},
+	highTechFactory : {
+		influence: 6,
+		type: "highTechFactory",
+		color: "#cc7727",
+		
+		canGenerateRoad: true,
+		isCommercial: true,
+		isDestroyable: false,
+		
+		incomeGenerate: 5000,
+		yearlyCost: 20000,
+		
+		wasteEmissions: 0.2,
+		carbonEmissions: 0
 	}
 }
 
@@ -694,7 +749,9 @@ class Street {
 class SDG {
 	
 	constructor({
-		id = 2
+		id = 0,
+		requirements = {},
+		progress = 0
 	} = {}
 	) {
 		
@@ -702,8 +759,147 @@ class SDG {
 }
 
 SDG.prototype.SDGList = {
-	2 : {
+	6 : {
 		accessWater : 0,
 		
 	}
+}
+
+SDG.prototype.actionCardList = {
+	"Add BRT Service" : {
+		cost : 50000,
+		oneTime : true,
+		description : "Create a new Bus Rapid Tranist service for nearby residents.",
+		requires : "None",
+		type : "transportation",
+		icon: "directions_bus"
+	},
+	"Add Bus Stop" : {
+		cost : 2000,
+		oneTime : false,
+		description : "Generate a bus stop on a random street!",
+		required : "BRT Service",
+		type : "transportation",
+		icon: "hail"
+	},
+	"Convert BRT to Electric" : {
+		cost : 20000,
+		oneTime : true,
+		description : "Upgrade the existing service to an electric service.",
+		requires : "BRT Service, 3 Bus Stops",
+		type : "transportation",
+		icon : "bolt"
+	},
+	"Add Electric Bus Stops" : {
+		cost : 4000,
+		oneTime : false,
+		description : "Generate a bus stop on a random street, now with ELECTRICITY!",
+		required : "Electric BRT Service",
+		type : "transportation",
+		icon : "electrical_services"
+	},
+	"Improve Water Pipeline" : {
+		cost : 3000,
+		oneTime : true,
+		description : "Improve the existing water pipeline system for ALL residents.",
+		requires : "None",
+		type : "water",
+		icon : "valve"
+	},
+	"Build Water Stations" : {
+		cost : 10000,
+		oneTime : false,
+		description : "Create 4 water stations around the place (MAX 2)",
+		required : "Improve Water Pipeline",
+		type : "water",
+		icon : "water_drop"
+	},
+	"Build Restrooms" : {
+		cost : 2000,
+		oneTime : false,
+		description : "Creates 2 restrooms nearby some residential and commercial zones.",
+		requires : "Improve Water Pipeline",
+		type : "water",
+		icon : "wc"
+	},
+	"Improve Filtration System" : {
+		cost : 20000,
+		oneTime : false,
+		description : "Improves the filtration system for ALL residents (Warning: 50% to work/break per year).",
+		required : "None",
+		type : "water",
+		icon: "filter_alt"
+	},
+	"Affordable Energy Act" : {
+		cost : 0,
+		oneTime : true,
+		description : "Implement bill to reduce energy costs and allow access to more people.",
+		requires : "None",
+		type : "acts",
+		icon: "bookmark"
+	},
+	"Sustainable Energy Act" : {
+		cost : 500,
+		oneTime : true,
+		description : "Implements sustainable energy changes and helps reduce pollution (Warning: Costs 500 UNd per year)",
+		required : "None",
+		type : "acts",
+		icon: "solar_power"
+	},
+	"Create Low-Tech Factory" : {
+		cost : 0,
+		oneTime : false,
+		description : "Create a new basic factory that generates 2500 UND per month.",
+		requires : "None",
+		type : "manufacturing",
+		icon: "factory"
+	},
+	"Create High-Tech Factory" : {
+		cost : 2000,
+		oneTime : false,
+		description : "Create a new high-tech and more sustainable factory for 5000 UND per month!",
+		required : "Affordable Energy Act",
+		type : "manufacturing",
+		icon: "conveyor_belt"
+	},
+	"Add Recycling Center" : {
+		cost : 20000,
+		oneTime : true,
+		description : "Create a recycling center at a random location.",
+		requires : "None",
+		type : "manufacturing",
+		icon : "recycling"
+	},
+	"Add Police Officers" : {
+		cost : 100,
+		oneTime : false,
+		description : "HIRE a police offer (we're not making anyone) to reduce crime rate!",
+		required : "None",
+		type : "social",
+		icon: "local_police"
+	},
+	"Love All" : {
+		cost : 0,
+		oneTime : true,
+		description : "Encourage peace with one another through flyers.",
+		requires : "None",
+		type : "social",
+		icon: "favorite"
+	},
+	"Shopping Spree" : {
+		cost : 10000,
+		oneTime : true,
+		description : "Everything is on sale! All businesses/factories generate 2x the income for one year, but generate a quarter of the income next year.",
+		required : "None",
+		type : "social",
+		icon: "shopping_cart"
+	},
+	"Emergency Funding" : {
+		cost : 0,
+		oneTime : true,
+		description : "Need quick money? We have 20000 UND for you!",
+		requires : "None",
+		type : "social",
+		icon: "medical_services"
+	},
 }

@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="css/global.css">
 		<link rel="stylesheet" href="css/game.css">
 		<link rel="stylesheet" href="css/menu.css">
-		<link rel="icon" href="img/SDGLogo.png">
+		<link rel="icon" href="resources/SDGLogo.png">
 		
 		<script src="js/classes.js"></script>
 		<script src="js/logic.js"></script>
@@ -20,13 +20,66 @@
 			window.addEventListener("load",() => {
 				document.querySelector("#preloader").className = "dissapear";
 				setTimeout(function() {
-					document.body.removeChild(document.querySelector("#preloader"));
+					document.querySelector("#preloader").className = "inactive";
 				},1000)
 			})
 		</script>
 	</head>
 
 	<body>
+		<div id="notification">Test Notification</div>
+		<dialog id="actionCards">
+			<div class="gameColorsBar">
+				<div class="colorBar" style="--color: #4c9e38"></div>
+				<div class="colorBar" style="--color: #25bde2"></div>
+				<div class="colorBar" style="--color: #fbc30a"></div>
+				<div class="colorBar" style="--color: #fe6925"></div>
+				<div class="colorBar" style="--color: #fd9d24"></div>
+				<div class="colorBar" style="--color: #c08b2f"></div>
+				<div class="colorBar" style="--color: #3f7e45"></div>
+			</div>
+			<span class="dialogTitle">Action Cards</span>
+			<button class="material-symbols-outlined close">close</button>
+			<p>Click on an action card to execute it. <b>WARNING! You can still buy it even if you can't afford it, this <u>will be added to your debt, and will double every year you fail to pay it.</u></b></p>
+			<div>
+				<span class="categoryTitle">Transportation</span>
+				<div class="categoryHolder" id="transportation">
+					<button class="actionCardHolder" id="addBRTService">
+						<div class="ACIconHolder material-symbols-outlined">directions_bus</div>
+						<div class="ACContent">
+							<span class="ACTitle">Add BRT Service</span>
+							<span class="ACRequirements">* Requires: None</span>
+							<hr>
+							<span class="ACDescription">Create a new Bus Rapid Tranist service for nearby residents.</span>
+							<span class="ACKeys">50,000 UND <b>(ONE TIME PURCHASE)</b></span>
+						</div>
+					</button>
+					<button class="actionCardHolder" id="addBusStop">
+						<div class="ACIconHolder material-symbols-outlined">hail</div>
+						<div class="ACContent">
+							<span class="ACTitle">Add Bus Stop</span>
+							<span class="ACRequirements">* Requires: BRT Service</span>
+							<hr>
+							<span class="ACDescription">Create a new bus stop! (Note: Generates on a random street, you don't get to pick.)</span>
+							<span class="ACKeys">2,000 UND</span>
+						</div>
+					</button>
+				</div>
+				<span class="categoryTitle">Water Service</span>
+				<div class="categoryHolder" id="water">
+				</div>
+				<span class="categoryTitle">Bill Acts</span>
+				<div class="categoryHolder" id="acts">
+				</div>
+				<span class="categoryTitle">Manufacturing Service</span>
+				<div class="categoryHolder" id="manufacturing">
+				</div>
+				<span class="categoryTitle">Social Service</span>
+				<div class="categoryHolder" id="social">
+				</div>
+				
+			</div>
+		</dialog>
 		<dialog id="gameStatistics">
 				<div class="gameColorsBar">
 					<div class="colorBar" style="--color: #4c9e38"></div>
@@ -61,7 +114,7 @@
 						<div class="SDGStatHolder">SDG9: Industry, Innovation, and Infrastructure</div>
 						<div class="SDGStatContent" id="SDG9Holder">
 						</div>
-						<div class="SDGStatHolder">SDG11: Sustainable Cities and Communites</div>
+						<div class="SDGStatHolder">SDG11: Sustainable Cities and Communities</div>
 						<div class="SDGStatContent" id="SDG11Holder">
 						</div>
 						<div class="SDGStatHolder">SDG12: Responsible Consumption and Production</div>
@@ -83,8 +136,12 @@
 				<div class="colorBar" style="--color: #c08b2f"></div>
 				<div class="colorBar" style="--color: #3f7e45"></div>
 			</div>
+			<button class="material-symbols-outlined back" id="dictionaryBack">arrow_back
+				<span class="toolTip">Back</span>
+			</button>
 			<span class="dialogTitle">Guide</span>
 			<button class="material-symbols-outlined close">close</button>
+			<iframe id="guideIF" title="Guide" src="resources/Guide/guide.html"></iframe>
 		</dialog>
 		<div id="preloader"> 
 			<div class="loader"></div> 
@@ -102,8 +159,7 @@
 				</div>
 				<span class="dialogTitle">Credits</span>
 				<div class="dialogTextHolder">
-					<p>Created by:<a href="https://github.com/JKPotato-Computer">JK_Potato</a>, <a href="https://github.com/JaukG9">JaukG9</a>, <a href="https://github.com/pkoduri14">Praj. K</a>, and <a href="">Anonymous User</a>.</p>
-					<p>Special Thanks to: that one AP® Human Geography teacher!</p>
+					<p>Special Thanks to: that one AP® Human Geography teacher for feedback/playtesting!</p>
 					<hr>
 					<p>Graphics sourced from:</p>
 					<ul>
@@ -133,7 +189,7 @@
 			<div id="backgroundImageHolder"></div>
 			<div id="titleContentHolder">
 				<div id="logoHolder">
-					<img src="img/SDGLabel.png" id="logo">
+					<a href="https://sdgs.un.org" target="_blank"><img src="resources/SDGLabel.png" id="logo"></a>
 					<div>
 						<div class="logoBar"></div>
 						<div class="logoText">THE GAME</div>
@@ -147,7 +203,7 @@
 					<button id="about" class="menuButton">About</button>
 				</div>
 			
-				<span id="disclaimer"><b>DISCLAIMER:</b> The content of this publication has not been approved by the United Nations and does not reflect the views of the United Nations or its officials or Member States.
+				<span id="disclaimer"><b>DISCLAIMER:</b> The content of this publication has not been approved by the United Nations and does not reflect the views of the United Nations, its officials, or Member States.
 					<br>
 					Submission for the <a href="https://gnec-hackathon-2024.devpost.com/">2024 GNEC Hackathon</a>.
 				</span>
@@ -273,9 +329,9 @@
 			<div id="gameButtons">
 				<button id="viewAnalytics" class="material-symbols-outlined">
 					monitoring
-					<span class="toolTip">Municipial Report</span>
+					<span class="toolTip">Municpial Report</span>
 				</button>
-				<button id="actionCards" class="material-symbols-outlined">
+				<button id="viewActionCards" class="material-symbols-outlined">
 					history_edu
 					<span class="toolTip">Action Cards</span>
 				</button>

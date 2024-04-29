@@ -1,7 +1,7 @@
 let activePage = "gameMenu";
 let mapScale = 1;
 let availableMapScales = ["Village","Town","City"]
-let autoOpen = false;
+let autoOpen = true;
 
 function switchMenu(page) {
     let previouslyActivePage = activePage;
@@ -97,9 +97,18 @@ document.querySelector("#startGame").addEventListener("click", () => {
 		document.querySelector("#errorLoading").showModal();
 		return;
 	}
+	document.querySelector("#preloader").className = "appear";
 	
-	switchMenu("gameInterface");
-	setTimeout(function() {game.setupMap();},2000)
+	setTimeout(function() {
+		switchMenu("gameInterface");
+		document.querySelector("#preloader").className = "";
+	},1000)
+	
+	setTimeout(function() {
+		document.querySelector("#preloader").className = "dissapear";
+	},2000)
+	
+	setTimeout(function() {game.setupMap(); document.querySelector("#preloader").className = "inactive";},3000)
 })
 
 document.querySelector("#settingsBtn").addEventListener("click", () => {

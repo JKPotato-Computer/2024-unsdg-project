@@ -173,7 +173,7 @@ const game = (function() {
 		
 		inSession = true;
 		gameData.timeElapsed = 0;
-		gameData.SDGDeadline = 1200 - (date.getMonth() * 60);
+		gameData.SDGDeadline = 900 - (date.getMonth() * 60);
 		
 		gameData.budget = gameEnum.baseConfig[gameData.mapSize].budget;
 		gameData.yearlyDue = gameEnum.baseConfig[gameData.mapSize].yearlyDue;
@@ -231,6 +231,18 @@ const game = (function() {
 					gameData.trackerData.incomeGain += Math.floor(gameEnum.baseConfig[gameData.mapSize].budget * 0.3);
 					gameData.trackerData.incomeLost += gameData.yearlyDue;
 				
+					let yearlyLost = 0;
+					let checkIds = [];
+					for (let x = 0;x < gameData.districtPropertyData.length;x++) {
+						for (let y = 0;y < gameData.districtPropertyData.length;y++) {
+							let property = gameData.districtPropertyData[x][y];
+							if ((!checkIds.includes(property.id)) &&(property.yearlyDue)) {
+								yearlyLost += property.yearlyDue;
+								checkIds.push(property.id);
+							}
+						}
+					}
+				
 					if ((gameData.debt > 0) && (gameData.debt - gameData.budget <= 0)) {
 						gameData.debt -= gameData.budget;
 						gameData.budget = 0;
@@ -255,7 +267,7 @@ const game = (function() {
 				break;
 			default:
 				if (gameData.SDGDeadline <= 0) {
-					gameData.SDGDeadline = 1200;
+					gameData.SDGDeadline = 900;
 				}
 
 				gameData.dateSwitch = false;
@@ -294,8 +306,31 @@ const game = (function() {
 		document.querySelector("#dictionary").showModal();
 	})
 	
+	document.querySelector("#viewActionCards").addEventListener("click",() => {
+		document.querySelector("#actionCards").showModal();
+	})
+	
+	
+	document.querySelector("#dictionaryBack").addEventListener("click",() => {
+		document.querySelector("#guideIF").contentWindow.document.querySelector("#homePage").className = "active";
+		document.querySelector("#guideIF").contentWindow.document.querySelector("#SDGList").className = "";
+		document.querySelector("#guideIF").contentWindow.document.querySelector("#guide").className = "";
+		document.querySelector("#guideIF").contentWindow.document.querySelector("#propertyList").className = "";
+	})
+	
 	const setGameData = function(i,v) {
 		gameData[i] = v;
+	}
+	
+	for (const type of Object.keys(SDG.prototype.actionCardList)) {
+		const cardInfo = SDG.prototype.actionCardList[type];
+		
+		const newButton = document.createElement("button");
+		newButton.className = "actionCardHolder";
+		
+		const ACIcon = document.createElement("div");
+		
+		ACIcon.textContent = cardInfo.icon;
 	}
 	
 	return {

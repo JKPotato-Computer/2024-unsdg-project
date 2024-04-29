@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>USDGG: Guide</title>
+	<link rel="stylesheet" href="guide.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+	<script src="guide.js" defer></script>
+</head>
+<body>
+	<content id="homePage" class="active">
+		<div id="SDGScrollList">
+			<div class="SDG3 active">
+				<span class="SDGLabel">SDG 3: Good Health and Well Being</span>
+				<span class="SDGDescription">asdasdasdad</span>
+				<img draggable="false" src="../G3.png" class="SDGIcon">
+			</div>
+			<div class="SDG6">
+				<span class="SDGLabel">SDG 6: Clean Water and Sanitation</span>
+				<span class="SDGDescription"></span>
+				<img draggable="false" src="../G6.png" class="SDGIcon">
+			</div>
+			<div class="SDG7">
+				<span class="SDGLabel">SDG 7: Affordable and Clean Energy</span>
+				<span class="SDGDescription"></span>
+				<img draggable="false" src="../G7.png" class="SDGIcon">
+			</div>
+			<div class="SDG9">
+				<span class="SDGLabel">SDG 9: Industry, Innovation, and Infrastructure</span>
+				<span class="SDGDescription"></span>
+				<img draggable="false" src="../G9.png" class="SDGIcon">
+			</div>
+			<div class="SDG11">
+				<span class="SDGLabel">SDG 11: Sustainable Cities and Communities</span>
+				<span class="SDGDescription"></span>
+				<img draggable="false" src="../G11.png" class="SDGIcon">
+			</div>
+			<div class="SDG12">
+				<span class="SDGLabel">SDG 12: Responsible Consumption <br> and Production</span>
+				<span class="SDGDescription"></span>
+				<img draggable="false" src="../G12.png" class="SDGIcon">
+			</div>
+			<div class="SDG13">
+				<span class="SDGLabel">SDG 13: Climate Action</span>
+				<span class="SDGDescription"></span>
+				<img draggable="false" src="../G13.png" class="SDGIcon">
+			</div>
+			<div class="SDGProgress">
+				<div class="SDGCircle current" id="sdgCircle1"></div>
+				<div class="SDGCircle" id="sdgCircle2"></div>
+				<div class="SDGCircle" id="sdgCircle3"></div>
+				<div class="SDGCircle" id="sdgCircle4"></div>
+				<div class="SDGCircle" id="sdgCircle5"></div>
+				<div class="SDGCircle" id="sdgCircle6"></div>
+				<div class="SDGCircle" id="sdgCircle7"></div>
+			</div>
+		</div>
+		<div id="buttonList">
+		<button id="openSDGList">
+			<span class="material-symbols-outlined">public</span>
+			<span class="buttonLabel">Sustainable Development Goals (SDGs)</span>
+		</button>
+		<button id="openProperties">
+			<span class="material-symbols-outlined">nature_people</span>
+			<span class="buttonLabel">Properties</span>
+		</button>
+		<button id="openGuide">
+			<span class="material-symbols-outlined">menu_book</span>
+			<span class="buttonLabel">Guide</span>
+		</button>
+		</div>
+	</content>
+	<content id="SDGList">
+		<span class="contentTitle">SDGs</span>
+		<div id="SDGListBar">
+			<button class="SDGOption selected" id="SDG3"><img draggable="false" src="../G3.png" class="SDGImageOption"></button>
+			<button class="SDGOption" id="SDG6"><img draggable="false" src="../G6.png" class="SDGImageOption"></button>
+			<button class="SDGOption" id="SDG7"><img draggable="false" src="../G7.png" class="SDGImageOption"></button>
+			<button class="SDGOption" id="SDG9"><img draggable="false" src="../G9.png" class="SDGImageOption"></button>
+			<button class="SDGOption" id="SDG11"><img draggable="false" src="../G11.png" class="SDGImageOption"></button>
+			<button class="SDGOption" id="SDG12"><img draggable="false" src="../G12.png" class="SDGImageOption"></button>
+			<button class="SDGOption" id="SDG13"><img draggable="false" src="../G13.png" class="SDGImageOption"></button>
+		</div>
+		<div id="SDGContent">
+			<span id="SDGTitle">3) GOOD HEALTH AND WELL BEING</span>
+			<span id="SDGDescription">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil, quos, saepe a similique totam excepturi enim natus voluptatum rerum eum veritatis aspernatur minus ipsum accusamus voluptate minima quis suscipit officia!</span>
+			<span class="SDGDetail">Ways to reach the goal:</span>
+			<ul id="SDGMeasures">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ul>
+		</div>
+	</content>
+	<content id="propertyList">
+		<span class="contentTitle">Properties</span>
+		<div id="propertyHolder">
+		</div>
+	</content>
+	<content id="guide">
+		<span class="contentTitle">Guide</span>
+	</content>
+</body>
+</html>

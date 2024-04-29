@@ -44,24 +44,21 @@ content.previouslyActive {
 	}
 }
 
-content#gameMenu {
-	background-image: url("../img/SDGTitleBG.jpg");
-	background-size: cover;
-}
-
+ 
 div#titleContentHolder {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
 	padding: 1.5rem 2rem;
-	height:100%;
+	height: 100%;
 	width:  max-content;
 	max-width: min-content;
-	background-color: rgba(255,255,255,.8);
+	background-color: rgba(255,255,255,.7);
 	position: fixed;
 	left: 5rem;
 	animation: flowIn 1s ease-out forwards;
 	overflow: hidden;
+	backdrop-filter: blur(4px);
 }
 
 @keyframes flowIn {
@@ -85,15 +82,25 @@ div#backgroundImageHolder {
 	position: fixed;
 	left: 0;
 	top: 0;
-	background-image: url("../img/BGEffect.png");
-	opacity: .15;
+	background-image: url("../resources/SDGTitleBG.jpg");
 	background-size: cover;
 	background-position: center;
-	animation: imageLoop 2s ease-in-out infinite;
+	border: 0;
+	opacity: 0;
+	animation: fadeIn 1.5s ease-out forwards;
+	animation-delay: 500ms;
 }
 
-@keyframes imageLoop {
-	50% {scale: 1.02}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		scale: 1.2;
+	}
+
+	to {
+		opacity: 1;
+		scale: 1;
+	}
 }
 
 #logo {
@@ -104,6 +111,7 @@ div#backgroundImageHolder {
 	text-align: center;
 	font-size: 12px;
 	width: 325px;
+	margin-bottom: 5%;
 }
 
 #logoHolder {
@@ -257,15 +265,15 @@ div#backgroundImageHolder {
 }
 
 #cityScale {
-	background-image: url("../img/LightCity.png");
+	background-image: url("../resources/LightCity.png");
 }
 
 #townScale {
-	background-image: url("../img/LightTown.png");
+	background-image: url("../resources/LightTown.png");
 }
 
 #villageScale {
-	background-image: url("../img/LightVillage.png");
+	background-image: url("../resources/LightVillage.png");
 }
 
 #cityScale.selected,
@@ -416,6 +424,10 @@ button#funFactBtn:hover {
 	align-items: center;
 }
 
+#preloader.inactive {
+	display: none;
+}
+
 .loader {
 	border: 10px solid var(--primary); /* Loader border color */
 	border-radius: 50%; 
@@ -425,6 +437,10 @@ button#funFactBtn:hover {
 
 	transition: scale .5s linear;
 	animation: spin 2s linear infinite; 
+}
+
+#preloader.appear {
+	animation: fadeOut .5s reverse ease-out;
 }
 
 #preloader.dissapear > .loader {

@@ -82,3 +82,7 @@ button {
 a {
 	color: var(--text);
 }
+
+button {
+	font-family: Roboto;
+}

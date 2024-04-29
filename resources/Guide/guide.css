@@ -1,0 +1,282 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+:root {
+	--sdg3: #4c9e38;
+	--sdg6: #25bde2;
+	--sdg7: #fbc30a;
+	--sdg9: #fe6925;
+	--sdg11: #fd9d24;
+	--sdg12: #c08b2f;
+	--sdg13: #3f7e45;
+}
+
+* {
+	box-sizing: border-box;
+	font-family: Roboto;
+}
+
+span {
+	font-size: 5vh;
+}
+
+img {
+	height: 50px;
+}
+
+button {
+	border: 0;
+	background: none;
+	cursor: pointer;
+}
+
+body {
+	margin: 0;
+}
+
+content {
+	position: fixed;
+	inset: 0;
+	display: none;
+	width: 100%;
+	height: 100%;
+}
+
+content.active {
+	display: block;
+}
+
+content#homePage {
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+content#homePage.active {
+	display: flex;
+}
+
+content#homePage > div {
+	height: 50%;
+}
+
+#SDGScrollList {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+	height: 100%;
+}
+
+#SDGScrollList > div:not(.SDGProgress) {
+	position: absolute;
+	width: calc(100% - 2rem);
+	height: calc(100% - 1rem);
+	left: 100%;
+	margin: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: start;
+	padding: 1rem;
+}
+
+#SDGScrollList > div:not(.SDGProgress) * {
+	color: white;
+}
+
+#SDGScrollList > div.active {
+	left: 0%;
+}
+
+#SDGScrollList > div:not(.SDGProgress).flyIn {
+	animation: flyIn ease-out .75s forwards;
+	left: 100%;
+}
+
+#SDGScrollList > div:not(.SDGProgress).flyOut {
+	animation: flyOut ease-out .75s forwards;
+	left: 0%;
+}
+
+@keyframes flyIn {
+	from {left: 100%;}
+	to {left: 0%}
+}
+
+@keyframes flyOut {
+	from {left: 0%;}
+	to {left: -100%;}
+}
+
+.SDGProgress {
+	display: flex;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 5%;
+	gap: 2vh;
+}
+
+
+.SDGCircle.current {
+	background-color: rgb(255,255,255)
+}
+
+.SDGCircle {
+	height: 3vh;
+	width: 3vh;
+	aspect-ratio: 1/1;
+	background-color: rgba(255,255,255,0.5);
+	border-radius: 50%;
+	transition: .5s ease-out;
+}
+
+.SDGLabel {
+	font-weight: bold;
+	font-family: Roboto Condensed;
+	font-size: 8vh;
+}
+
+.SDGIcon {
+	position: absolute;
+	right: 6vh;
+	height: 35vh;
+}
+
+.SDG3 {
+	background: linear-gradient(125deg, var(--sdg3), rgb(98 207 109));
+}
+
+.SDG6 {
+	background: linear-gradient(125deg, var(--sdg6), rgb(41, 213, 255));
+}
+
+.SDG7 {
+	background: linear-gradient(125deg, var(--sdg7), rgb(200,200,0));
+}
+
+.SDG9 {
+	background: linear-gradient(125deg, var(--sdg9), rgb(255,142,0));
+}
+
+.SDG11 {
+	background: linear-gradient(125deg, var(--sdg11), rgb(255,60,0));
+}
+
+.SDG12 {
+	background: linear-gradient(125deg, var(--sdg12), rgb(255,162,0));
+}
+
+.SDG13 {
+	background: linear-gradient(125deg, var(--sdg13), rgb(0,200,0));
+}
+
+
+
+#buttonList {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1rem;
+	width: 100%;
+}
+
+#buttonList > button {
+	width: 33%;
+	background: rgb(0,0,0,.025);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+#buttonList > button:hover {
+	background: rgb(0,0,0,0.1);
+	border: 1px solid black;
+}
+
+#buttonList > button > span:not(.material-symbols-outlined) {
+	font-size: 6vh;
+	font-family: Roboto Condensed;
+	font-weight: 600;
+}
+
+#buttonList > button > span.material-symbols-outlined {
+	font-size: 64px;
+}
+
+#SDGList {
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 2vh;
+}
+
+#SDGList.active {
+	display: flex;
+}
+
+.contentTitle {
+	font-weight: bold;
+	font-family: Roboto Condensed;
+	font-size: 6vh;
+}
+
+#SDGListBar {
+	width: 100%;
+	height: 20vh;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+#SDGListBar > button {
+	height: 20vh;
+	width: 20vh;
+	aspect-ratio: 1/1;
+	filter: brightness(70%)
+}
+
+#SDGListBar > button > img {
+	height: 100%;
+	width: 100%;
+	aspect-ratio: 1/1;
+}
+
+#SDGListBar > button.selected {
+	filter: brightness(100%)
+}
+
+#SDGListBar > button:not(.selected):hover {
+	filter: brightness(85%);
+}
+
+#SDGContent {
+	display: flex;
+	flex-direction: column;
+	background-color: rgb(237 246 255);
+	width: 95%;
+	flex-grow: 1;
+	margin-bottom: 3vh;
+	padding: 2vh;
+}
+
+
+#SDGTitle {
+	font-weight: bold;
+	font-family: Roboto Condensed;
+}
+
+#SDGDescription {
+	font-size: 3.5vh;
+}
+
+#SDGMeasures {
+	font-size: 3.5vh;
+}
+
+.SDGDetail {
+	margin-top: 2vh;
+	font-size: 3vh;
+}
