@@ -371,7 +371,6 @@ class Zone {
 		
 		let baseStreet = new Street();
 		baseStreet.type = "road";
-		baseStreet.roadLanes = 1;
 		baseStreet.influence = this.influence;
 
 		console.log("Base Location:",this.type,this.getCornerIdentifierOfZone(districtPropertyData));
@@ -381,23 +380,24 @@ class Zone {
 		switch (relativeDirection) {
 			case "N":
 				[destX,destY] = baseStreet.getStreetByZoneDirection(districtPropertyData, this, x, y, "E");
-				baseStreet.drawStreet(streetPropertyData,destX,destY - spaces,relativeDirection, spaces, this.influence);
+				streetPropertyData = baseStreet.drawStreet(streetPropertyData,destX,destY - spaces,relativeDirection, spaces, this.influence);
 				break;
 			case "E":
 				[destX,destY] = baseStreet.getStreetByZoneDirection(districtPropertyData, this, x, y, "N");
-				baseStreet.drawStreet(streetPropertyData,destX - spaces,destY,relativeDirection, spaces, this.influence);
+				streetPropertyData = baseStreet.drawStreet(streetPropertyData,destX - spaces,destY,relativeDirection, spaces, this.influence);
 				break;
 			case "S":
 				[destX,destY] = baseStreet.getStreetByZoneDirection(districtPropertyData, this, x, y, "W");
-				baseStreet.drawStreet(streetPropertyData,destX,destY + spaces,relativeDirection, spaces, this.influence);
+				streetPropertyData = baseStreet.drawStreet(streetPropertyData,destX,destY + spaces,relativeDirection, spaces, this.influence);
 				break;
 			case "W":
 				[destX,destY] = baseStreet.getStreetByZoneDirection(districtPropertyData, this, x, y, "S");
-				baseStreet.drawStreet(streetPropertyData,destX + spaces,destY,relativeDirection, spaces, this.influence);
+				streetPropertyData = baseStreet.drawStreet(streetPropertyData,destX + spaces,destY,relativeDirection, spaces, this.influence);
 				break;
 		}
 		console.log("Street Destination:",destX,destY)
 		
+		console.log(streetPropertyData);
 		return streetPropertyData;
 	}
 }
@@ -461,7 +461,6 @@ Zone.prototype.zoneTypes = {
 		type : "residentialPark",
 		color : "#4A4063",
 		influence : 2,
-		isCommercial : false,
 		
 		incomeGenerate : 20,
 		incomeBoost : 0,
@@ -600,7 +599,7 @@ Zone.prototype.zoneTypes = {
 	policeStation: {
 		influence: 2,
 		type: "policeStation",
-		color: "##0000c2",
+		color: "#000000",
 		height: 1,
 		width: 2,
 		canGenerateRoad : false,
@@ -676,11 +675,8 @@ class Street {
 		
 		* @param {object} [street] - Optional parameters
 		* @param {number} [street.influence] - Influence of street
-		* @param {number} [street.roadLanes] - Lanes on road
 		* @param {string} [street.type] - Type of street (interstate, road, bike road, etc.)
-		
-		* @param {boolean} [street.hasSidewalk]
-		* @param {boolean} [street.hasInterstate]
+	
 		* @param {boolean} [street.hasBusStop]
 		* @param {boolean} [street.hasBikeLane]
 		
@@ -688,68 +684,59 @@ class Street {
 	
 	constructor({
 		influence = 0,
-		roadLanes = 0,
 		type = "",
 		
-		hasSidewalk = false,
-		hasInterstate = false,
 		hasBusStop = false,
 		hasBikeLane = false
 	} = {}
 	) {
 		this.influence = influence;
-		this.roadLanes = roadLanes;
 		this.type = type;
 		
-		this.hasSidewalk = hasSidewalk;
-		this.hasInterstate = hasInterstate;
 		this.hasBusStop = hasBusStop;
 		this.hasBikeLane = hasBikeLane;
 	}
 	
-	drawStreet(streetPropertyData, x1, y1, direction, spaces, maxInfluence) {
-		let influence = maxInfluence;
+	drawStreet(streetPropertyData, x1, y1, direction, spaces, influence) {
 		console.log("drawStreet Parameters:",x1, y1, direction, spaces, influence)
 		switch (direction) {
 			case "N":
 				for (let y = y1;y < y1 + spaces;y++) {
-					let street = this;
-					this.influence = influence;
+					const street = new Street();
+					street.influence = influence;
 					streetPropertyData[x1][y] = street;
 					influence -= 0.5;
-					console.log(direction,"New Influence:",influence,"// Location:",x1, y);
+					console.log(direction,"New Influence:",influence,"// Location:",x1, y,"// Item:", street);
 				}
-				break;
+				return streetPropertyData;
 			case "E":
 				for (let x = x1;x < x1 + spaces;x++) {
-					let street = this;
-					this.influence = influence;
+					const street = this;
+					street.influence = influence;
 					streetPropertyData[x][y1] = street;
 					influence -= 0.5;
-					console.log(direction,"New Influence:",influence,"// Location:",x, y1);
+					console.log(direction,"New Influence:",influence,"// Location:",x, y1,"// Item:", street);
 				}
-				break;
+				return streetPropertyData;
 			case "S":
 				for (let y = y1;y >= y1 - spaces;y--) {
-					let street = this;
-					this.influence = influence;
+					const street = this;
+					street.influence = influence;
 					streetPropertyData[x1][y] = street;
 					influence -= 0.5;
-					console.log(direction,"New Influence:",influence,"// Location:",x1, y);
+					console.log(direction,"New Influence:",influence,"// Location:",x1, y,"// Item:", street);
 				}
-				break;
+				return streetPropertyData;
 			case "W":
 				for (let x = x1;x >= x1 - spaces;x--) {
-					let street = this;
-					this.influence = influence;
+					const street = this;
+					street.influence = influence;
 					streetPropertyData[x][y1] = street;
 					influence -= 0.5;
-					console.log(direction,"New Influence:",influence,"// Location:",x, y1);
+					console.log(direction,"New Influence:",influence,"// Location:",x, y1,"// Item:", street);
 				}
-				break;
+				return streetPropertyData;
 		}
-		
-		return streetPropertyData;
 	}
 	
 	getStreetByZoneDirection(districtPropertyData, zone, zoneX, zoneY, direction) {

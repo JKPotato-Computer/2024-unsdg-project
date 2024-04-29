@@ -34,14 +34,16 @@ function getTextColor(bgColor) {
 const canvas = document.getElementById("gameWorld");
 const ctx = canvas.getContext('2d');
 
-canvas.height = 775;
-canvas.width = 775;
+canvas.height = 1000;
+canvas.width = 1000;
 
 //global variables
 const gameGrid = [];
 let cellSize = canvas.width/11;
 let buildingSet = [];
 let buildingIDs = [];
+
+let active = false;
 
 //mouse
 const mouse = {
@@ -67,31 +69,43 @@ canvas.addEventListener('mouseleave', function(){
     mouse.y = undefined;
 });
 
-function createGrid(){
-    for (let y = 0; y < canvas.height; y += cellSize){
-        for (let x = 0; x < canvas.width; x += cellSize){
-            gameGrid.push(new Cell(x, y));
+function createGrid(streetPropertyData,mapSize){
+    for (let x = 0; x <= gameEnum.mapSizes[mapSize]; x += .5){
+        for (let y = (x % 1 != 0) ? (0) : (0.5); y <= gameEnum.mapSizes[mapSize]; y++){
+            if (x % 1 != 0) {
+                gameGrid.push(new Cell(x-0.5, y, x+0.5,y,streetPropertyData[x][y].influence));
+            } else {
+                gameGrid.push(new Cell(x, y - 0.5,x,y + 0.5,streetPropertyData[x][y].influence));
+            }
         }
    }
 }
 
-function handleGameGrid(){
+function handleGameGrid(streetPropertyData){
     for (let i = 0; i< gameGrid.length; i++){
         gameGrid[i].draw();
     } 
 }
 
 class Cell{
-    constructor(x, y){
-        this.x = x;
-        this.y = y;
-        this.width = cellSize;
-        this.height = cellSize;
+    constructor(x, y, x2, y2, influence){
+        this.x = x*cellSize;
+        this.x2 = x2 * cellSize;
+        this.y = y * cellSize;
+        this.y2 = y2 * cellSize;
+        this.influence = influence;
     }
     draw(){
-        ctx.lineWidth = 0;
-        ctx.strokeStyle = 'black';
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        //console.log(this.x,this.y,this.x2,this.y2);
+        if (this.influence == 0) { 
+            return;
+        }
+        
+        ctx.lineWidth = this.influence*3;
+        ctx.fillStyle = 'black';
+        ctx.moveTo(this.x,this.y);
+        ctx.lineTo(this.x2,this.y2);
+        ctx.stroke();
     }
 }
 
@@ -125,18 +139,23 @@ class Buildings{
 }
 
 function animate(){
+    if (!active) {
+        return;
+    }
+
+    let gameData = game.getGameData();
+
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    handleGameGrid();
+    handleGameGrid(gameData.streetPropertyData);
     for(let i = 0; i < buildingSet.length; i++){
         buildingSet[i].draw();
     }
 
     requestAnimationFrame(animate);
 }
-animate();
 
 function collision(first, second){
     if (    !(  first.x > second.x + second.width || 
@@ -153,7 +172,9 @@ window.addEventListener('resize', function(){
 });
 
 const canvasThingy = (function() {
-    const generateBuildingthitruifghoird = function() {
+    const generateBuilding = function(mapSize) {
+        active = true;
+    
         let gameData = game.getGameData();
         cellSize = canvas.width / (gameData.districtPropertyData.length);
 
@@ -161,8 +182,8 @@ const canvasThingy = (function() {
             gameGrid.pop();
         }
 
-        createGrid();
-        handleGameGrid();
+        createGrid(gameData.streetPropertyData,mapSize);
+        handleGameGrid(gameData.streetPropertyData);
 
         for(let i = 0; i < gameData.districtPropertyData.length; i++){
             for(let j = 0; j < gameData.districtPropertyData[i].length; j++){
@@ -173,9 +194,11 @@ const canvasThingy = (function() {
                 }
             }
         }
+
+        animate();
     }
 
     return {
-        generateBuildingthitruifghoird : generateBuildingthitruifghoird
+        generateBuilding : generateBuilding
     }
 })();

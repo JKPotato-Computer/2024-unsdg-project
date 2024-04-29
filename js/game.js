@@ -204,7 +204,7 @@ const game = (function() {
 			}
 		}
 
-		canvasThingy.generateBuildingthitruifghoird();
+		canvasThingy.generateBuilding(gameData.mapSize);
 		
 		const date = new Date();
 		gameData.date.month = date.getMonth();
@@ -265,9 +265,7 @@ const game = (function() {
 		for (let x = 0;x <= size;x+=0.5) {
 			gameData.streetPropertyData[x] = {};
 			for (let y = (x % 1 != 0) ? (0) : (0.5);y <= size;y++) {
-				gameData.streetPropertyData[x][y] = {};
-				gameData.streetPropertyData[x][y].surfaceType = "";  // road, light rail, interstate, etc.
-				gameData.streetPropertyData[x][y].upgrades = {}; // bus stop, bike lane, BRT, etc.
+				gameData.streetPropertyData[x][y] = new Street();
 			}
 		}
 	}
