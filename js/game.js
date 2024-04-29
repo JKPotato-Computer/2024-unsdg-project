@@ -336,7 +336,8 @@ const game = (function() {
 		ACContent.className = "ACContent";
 		
 		const ACTitle = document.createElement("span");
-		ACTitle.className = "ACTitle"
+		ACTitle.className = "ACTitle";
+		
 	}
 	
 	return {
