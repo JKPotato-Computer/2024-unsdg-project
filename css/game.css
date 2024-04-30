@@ -207,7 +207,7 @@ div#gameButtons {
 	opacity: 0.3;
 }
 
-div#gameButton:hover {
+div#gameButtons:hover {
 	opacity: 1;
 }
 
@@ -359,7 +359,7 @@ iframe {
 
 .categoryHolder {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-columns: max-content max-content max-content;
 	gap: 2vh;
 	padding: 2vh;
 	height: max-content;
@@ -374,6 +374,7 @@ iframe {
 	align-items: center;
 	height: max-content;
 	position: relative;
+	max-width: 90vh;
 }
 
 .categoryHolder > button:hover {
@@ -403,6 +404,7 @@ iframe {
 	flex-direction: column;
 	padding: 1vh;
 	text-align: left;
+	width: max-content;
 }
 
 .ACTitle {

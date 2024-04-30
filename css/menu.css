@@ -214,6 +214,12 @@ div#backgroundImageHolder {
 	animation: floatUp 1s ease-out forwards;
 }
 
+#buttonList > h3 {
+	opacity: 0;
+	animation: fadeIn 1s ease-out forwards;
+	animation-delay: 1.25s;
+}
+
 #buttonList > button:nth-child(1) {
 	animation-delay: 0ms;
 }
@@ -559,4 +565,15 @@ dialog[open] {
 
 .close:hover {
 	scale: 1.2;
+}
+
+div#villageNotif {
+	position: absolute;
+	background: rgb(255,255,255,0.8);
+	z-index: 5;
+	right: 1vh;
+	bottom: 1vh;
+	width: 50vh;
+	padding: 2vh;
+	text-align: center;
 }
