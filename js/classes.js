@@ -733,6 +733,7 @@ Zone.prototype.zoneTypes = {
 		
 		incomeGenerate : 400,
 		yearlyCost : 1500,
+		influence: 1,
 		
 		wasteEmissions:0,
 		carbonEmissions: 0.5,
@@ -749,6 +750,7 @@ Zone.prototype.zoneTypes = {
 		
 		incomeGenerate: 500,
 		yearlyCost: 700,
+		influence: 1,
 		
 		wasteEmissions : 0,
 		carbonEmissions: 0.1,
