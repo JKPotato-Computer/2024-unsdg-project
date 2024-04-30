@@ -459,3 +459,7 @@ iframe {
 .notification.invisible {
     opacity: 0;
 }
+
+#floatImg{
+    display: none;
+}
