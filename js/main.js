@@ -119,6 +119,18 @@ document.querySelector("#funFactBtn").addEventListener("click", () => {
 	document.querySelector("#centralPlaceTheory").showModal();
 })
 
+document.querySelector("#returnToMenu").addEventListener("click", () => {
+	location.reload();
+})
+
+document.querySelector("#hideMenu").addEventListener("click", () => {
+	document.querySelector("#gameOver").className = "";
+})
+
+document.querySelector("#returnMenu").addEventListener("click", () => {
+	document.querySelector("#gameOver").className = "visible";
+})
+
 if (autoOpen) {
 	switchMenu("gameInterface")
 	setTimeout(function() {game.setupMap();},2000)

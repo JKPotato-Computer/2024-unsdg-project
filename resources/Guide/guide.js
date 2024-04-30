@@ -31,9 +31,7 @@ setInterval(function() {
 	} else {
 		sdgIndex++;
 	}
-	
-	console.log(previousSDGIndex,sdgIndex);
-	
+
 	document.querySelectorAll(".SDG" + sdgList[previousSDGIndex])[0].className = "SDG" + sdgList[previousSDGIndex] + " flyOut active";
 	document.querySelectorAll(".SDG" + sdgList[sdgIndex])[0].className = "SDG" + sdgList[sdgIndex] + " flyIn active";
 

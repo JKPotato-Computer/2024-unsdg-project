@@ -20,11 +20,10 @@ const game = (function() {
 			score: 0
 		},
 		
-		playedActionCards : {
-			
-		},
+		playedActionCards : {},
 		
 		interestDebt : 0,
+		yearlyBase : 0,
 		
 		households : 0,
 	};
@@ -73,6 +72,22 @@ const game = (function() {
 		document.querySelector("#totalIncomeGenerated").innerHTML = "Total Income Generated: <b>$" + gameData.trackerData.incomeGain + "</b>";
 		document.querySelector("#totalExpenses").innerHTML = "Total Expenses: <b>$" + gameData.trackerData.incomeLost + "</b>";
 		
+		for (let SDGN = 0;SDGN < gameData.SDG.length;SDGN++) {
+			if (gameData.SDG[SDGN].id == 13) {
+				continue;
+			}
+			
+			let i = 1;
+			let SDG = gameData.SDG[SDGN];
+			for (const goal of Object.keys(SDG.requirements)) {
+				if (SDG.meetsRequirement(goal)) {
+					document.querySelector("#S" + SDG.id + "R" + i).className = "meets";
+				} else {
+					document.querySelector("#S" + SDG.id + "R" + i).className = "nomeets";
+				}
+				i++;
+			}
+		}
 	}
 	
 	const generateIncome = function() {
@@ -286,6 +301,7 @@ const game = (function() {
 		
 		if (realCard.oneTime) {
 			if (gameData.playedActionCards[card]) {
+				notify("Error: You already issued that card to the region. Maybe try another one?",5000)
 				return;
 			}
 		}
@@ -293,23 +309,130 @@ const game = (function() {
 		switch (card) {
 			case "Improve Water Pipeline":
 				gameData.playedActionCards[card] = realCard;
+				gameData.yearlyBase += 500;
+				gameData.yearlyDue += 500;
+				getSDGById(6).base.numAccessWater = Math.floor(gameData.households * 0.5);
+				
 				break;
 			case "Build Water Stations":
-				if (!gameData.playedActionCards[card]) {
+				if (!gameData.playedActionCards["Improve Water Pipeline"]) {
+					notify("Error: You need 'Improve Water Pipeline' before you can continue.",4000)
 					return;
 				}
+				
+				if (getSDGById(6).meetsRequirement("numWater")) {
+					notify("Error: All your residents have access to safe water. You don't need any more water stations!",5000)
+					getSDGById(6).base.numAccessWater = Math.floor(gameData.households);
+					return;
+				} else {
+					getSDGById(6).base.numWater += 10;
+					getSDGById(6).base.numAccessWater = Math.floor(gameData.households * 0.1);
+				}
+
 
 				placePropertyAtRandomLocation("waterStation");
-				getSDGById(6).base.numWater += 5;
+				canvasThingy.generateBuilding(gameData.mapSize);
 				break;
 			case "Improve Filtration System":
 				gameData.playedActionCards[card] = realCard;
+				getSDGById(6).base.waterPollution -= 200;
 				break;
+			case "Affordable Energy Act":
+				gameData.playedActionCards[card] = realCard;
+				getSDGById(12).base.carbonEmissions += 100;
+				getSDGById(7).base.accessEnergy = (gameData.households * 0.5);
+				break;
+			case "Sustainable Energy Act":
+				if (!gameData.playedActionCards["Affordable Energy Act"]) {
+					notify("Error: You need 'Affordable Energy Act' before you can use this product!",5000);
+					return;
+				}
+			
+				gameData.playedActionCards[card] = realCard;
+				gameData.playedActionCards["Sustainable Energy Act"].solarPanelsBought = gameData.date.year;
+				break;
+			case "Create Low-Tech Factory":
+				let factoryCount = 0;
+				for (let x = 0;x < gameData.districtPropertyData.length;x++) {
+					for (let y = 0;y < gameData.districtPropertyData.length;y++) {
+						let property = gameData.districtPropertyData[x][y];
+						if (property.type.includes("factory")) {
+							factoryCount++;
+						}
+					}
+				}
+				
+				if (factoryCount <= 5 + gameEnum.baseProperties[gameData.mapSize].factory) {
+					placePropertyAtRandomLocation("factory");
+					canvasThingy.generateBuilding(gameData.mapSize);
+				} else {
+					notify("Error: Too many factories!",6000)
+				}
+				break;
+			case "Create High-Tech Factory":
+				if (!gameData.playedActionCards["Sustainable Energy Act"].solarPanels) {
+					notify("Error: You must have 'Solar Panel' in order to make this factory!",6000)
+					return;
+				}
+				
+				let factoryCounts = 0;
+				for (let x = 0;x < gameData.districtPropertyData.length;x++) {
+					for (let y = 0;y < gameData.districtPropertyData.length;y++) {
+						let property = gameData.districtPropertyData[x][y];
+						if (property.type.includes("factory")) {
+							factoryCounts++;
+						}
+					}
+				}
+				
+				if (factoryCounts <= 5 + gameEnum.baseProperties[gameData.mapSize].factory) {
+					placePropertyAtRandomLocation("highTechFactory");
+					canvasThingy.generateBuilding(gameData.mapSize);
+				} else {
+					notify("Error: Too many factories!",6000)
+				}
+				break;
+			case "Add Recycling Center":
+				let recycleCounts = 0;
+				for (let x = 0;x < gameData.districtPropertyData.length;x++) {
+					for (let y = 0;y < gameData.districtPropertyData.length;y++) {
+						let property = gameData.districtPropertyData[x][y];
+						if (property.type == "recyclingCenter") {
+							recycleCounts++;
+						}
+					}
+				}
+				
+				if (recycleCounts < 8) {
+					placePropertyAtRandomLocation("recyclingCenter");
+					canvasThingy.generateBuilding(gameData.mapSize);
+				}
+				break;
+			case "Emergency Funding":
+				gameData.playedActionCards[card] = realCard;
+				gameData.budget += 20000;
+				break;
+			case "Power Station":
+				let powerCounts = 0;
+				for (let x = 0;x < gameData.districtPropertyData.length;x++) {
+					for (let y = 0;y < gameData.districtPropertyData.length;y++) {
+						let property = gameData.districtPropertyData[x][y];
+						if (property.type == "powerStation") {
+							powerCounts++;
+						}
+					}
+				}
+				
+				if (!getSDGById(7).meetsRequirement("accessEnergy")) {
+					getSDGById(7).base.accessEnergy += (gameData.households * 0.1);
+					placePropertyAtRandomLocation("powerStation");
+					canvasThingy.generateBuilding(gameData.mapSize);
+				} else {
+					notify("Error: You already meet the requirements! No more!",4000)
+				}
 		}
 
 		buyActionCard(realCard.cost);
-		
-		console.log(gameData.districtPropertyData);
 	}
 	
 	const getGameData = function() {
@@ -334,18 +457,97 @@ const game = (function() {
 					gameData.date.month = 0;
 					gameData.date.year++;
 					
+					// SDG Management
+					// SDG6
+					if (gameData.playedActionCards["Improve Water Pipeline"]) {
+						getSDGById(6).base.waterPollution -= 75;
+					}
+					
+					for (let x = 0;x < gameData.districtPropertyData.length;x++) {
+						for (let y = 0;y < gameData.districtPropertyData.length;y++) {
+							let property = gameData.districtPropertyData[x][y];
+							if (property.type == "waterStation") {
+								getSDGById(6).base.waterPollution += 100;
+							}
+						}
+					}
+					
+					if (gameData.playedActionCards["Improve Filtration System"]) {
+						if (getRandomIntInclusive(1,2) == 1) {
+							// Fail
+							delete gameData.playedActionCards["Improve Filtration System"];
+							notify("Alert! Your filtration system has been compromised! Replace one immediately to prevent further water pollution!",5000);
+						} else {
+							// Pass
+							getSDGById(6).base.waterPollution -= 600;
+							getSDGById(12).base.wasteDay -= 100;
+						}
+					}
+					
+					// SDG7
+					
+					if (gameData.playedActionCards["Affordable Energy Act"]) {
+						if (getSDGById(7).base.energyCost >= 10) {
+							getSDGById(7).base.energyCost -= 2;
+							getSDGById(12).base.carbonEmissions += 10;
+						}
+					}
+					
+					if (gameData.playedActionCards["Sustainable Energy Act"]) {
+						getSDGById(6).base.waterPollution -= 100;
+						getSDGById(12).base.carbonEmissions -= 600 + ((gameData.playedActionCards["Sustainable Energy Act"].solarPanels) ? (125) : (0));
+						getSDGById(12).base.wasteDay -= 50;
+						
+						if (gameData.date.year - gameData.playedActionCards["Sustainable Energy Act"].solarPanelsBought == 2) {
+							gameData.yearlyBase += 9500;
+							gameData.playedActionCards["Sustainable Energy Act"].solarPanels = true;
+							getSDGById(7).base.energySustainable = true;
+							notify("ALERT! Solar panels have just been installed, and your fees have increased to 10,000 UND!",8000);
+						}
+					}
+					
+					if (gameData.playedActionCards["Recycling Center"]) {
+						getSDGById(12).base.carbonEmissions -= 500;
+						getSDGById(12).base.wasteDay -= 50;
+					}
+					
+					
+					// Overall
+					let checksIDS = [];
+					for (let x = 0;x < gameData.districtPropertyData.length;x++) {
+						for (let y = 0; y< gameData.districtPropertyData.length;y++) {
+							let property = gameData.districtPropertyData[x][y];
+							if (property.type != "") {
+								getSDGById(12).base.carbonEmissions += ((property.carbonEmissions * 7) || 0);
+								getSDGById(12).base.wasteDay += property.wasteEmissions;
+								checksIDS.push(property.id);
+							}
+						}
+					}
+					
+					
+					
 					// SDG Progress Check:
 					// Check to see if each SDG requirement is met, if is calculate by Met / Total for progress
 					
 					for (const sdg of gameData.SDG) {{
 						let progress = 0;
-						let totalItems = sdg.requirements.length;
+						let totalItems = Object.keys(sdg.requirements).length;
 						for (const goal of Object.keys(sdg.requirements)) {
-							if (sdg.meetsRequirement(goal)) {
-								progress += (1 / totalItems);
+							console.log(sdg.base[goal],sdg.requirements[goal])
+							
+							if (typeof sdg.requirements[goal] === "string") {
+								let sdgAlt = getSDGById(parseInt(sdg.requirements[goal].split("-")[1]));
+								if (sdgAlt.progress == 100) {
+									progress += (1 / totalItems);
+								}
+							} else {
+								if (sdg.meetsRequirement(goal)) {
+									progress += (1 / totalItems);
+								}
 							}
 						}
-						sdg.progress = progress;
+						sdg.progress = progress*100;
 					}}
 
 
@@ -353,19 +555,6 @@ const game = (function() {
 					gameData.budget -= gameData.yearlyDue;
 					gameData.trackerData.incomeGain += Math.floor(gameEnum.baseConfig[gameData.mapSize].budget * 0.3);
 					gameData.trackerData.incomeLost += gameData.yearlyDue;
-				
-					let yearlyLost = 0;
-					let checkIds = [];
-					for (let x = 0;x < gameData.districtPropertyData.length;x++) {
-						for (let y = 0;y < gameData.districtPropertyData.length;y++) {
-							let property = gameData.districtPropertyData[x][y];
-							if ((!checkIds.includes(property.id)) &&(property.yearlyDue)) {
-								yearlyLost += property.yearlyDue;
-								checkIds.push(property.id);
-							}
-						}
-					}
-					gameData.budget -= yearlyLost;
 				
 					if ((gameData.debt > 0)) {
 						let budget = gameData.budget;
@@ -393,6 +582,20 @@ const game = (function() {
 				
 					gameData.yearlyDue = Math.floor(gameEnum.baseConfig[gameData.mapSize].yearlyDue * (1.001 * Math.floor(gameData.timeElapsed / 60)));
 				
+					let yearlyLost = 0;
+					let checkIds = [];
+					for (let x = 0;x < gameData.districtPropertyData.length;x++) {
+						for (let y = 0;y < gameData.districtPropertyData.length;y++) {
+							let property = gameData.districtPropertyData[x][y];
+							if ((!checkIds.includes(property.id)) &&(property.yearlyDue)) {
+								yearlyLost += property.yearlyDue;
+								checkIds.push(property.id);
+							}
+						}
+					}
+					gameData.yearlyDue += yearlyLost;
+					gameData.yearlyDue += gameData.yearlyBase;
+				
 					if (gameData.budget < 0) {
 						gameData.debt += (Math.abs(gameData.budget));
 						gameData.budget = 0;
@@ -410,18 +613,42 @@ const game = (function() {
 				break;
 			default:
 				if (gameData.SDGDeadline <= 0) {
-					gameData.SDGDeadline = 900;
+					gameData.gameSpeed = 0;
+					inSession = false;
+					clearInterval(timerInterval);
+					document.querySelector("#gameOver").className = "visible";
+					document.querySelector("#returnMenu").className = "material-symbols-outlined";
+					let failed = false;
+					for (let i = 0;i < gameData.SDG.length;i++) {
+						if (gameData.SDG[i].progress != 100) {
+							failed = true;
+							break;
+						}
+					}
+					
+					if (gameData.debt > 0) {
+						failed = true;
+					}
+					
+					if (failed) {
+						document.querySelector("#results").textContent = "You failed... somehow. Thanks for attempting to make the town sustainable."
+					} else {
+						document.querySelector("#results").textContent = "You emerged victorious! Thank you for making our town sustainable and follwing the SDGs!"
+					}
 				}
 
 				gameData.dateSwitch = false;
 				break;
 		}
-		
 		refreshUI();
 	}
 	
 	for (const speed of Object.keys(gameEnum.gameSpeed)) {
 		document.querySelector("#" + speed).addEventListener("click",() => {
+			if (!inSession) {
+				return;
+			}
+			
 			gameData.gameSpeed = gameEnum.gameSpeed[speed];
 			
 			clearInterval(timerInterval);

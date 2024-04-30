@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
  		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Urban Sustainability Game</title>
+		<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
  		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
 		<link rel="stylesheet" href="css/global.css">
@@ -28,6 +29,7 @@
 	</head>
 
 	<body>
+		<img src="resources/toolTip.png" id="floatImg">
 		<div id="notificationHolder">
 		</div>
 		<dialog id="actionCards">
@@ -42,7 +44,7 @@
 			</div>
 			<span class="dialogTitle">Action Cards</span>
 			<button class="material-symbols-outlined close">close</button>
-			<p>Click on an action card to execute it. <b>WARNING! You can still buy it even if you can't afford it, this <u>will be added to your debt, and will double every year you fail to pay it.</u></b></p>
+			<p>Click on an action card to execute it. <b>WARNING! You can still buy it even if you can't afford it, this <u>will be added to your debt, and will double every year you fail to pay it.</u> (NOTE: Transportation is not available at this time.)</b></p>
 			<div>
 				<span class="categoryTitle">Transportation</span>
 				<div class="categoryHolder" id="transportation">
@@ -59,7 +61,6 @@
 				<span class="categoryTitle">Social Service</span>
 				<div class="categoryHolder" id="social">
 				</div>
-				
 			</div>
 		</dialog>
 		<dialog id="gameStatistics">
@@ -84,26 +85,27 @@
 						<span id="preLfinalScore">Score: <b>0</b></span>
 					</div>
 					<div id="gameSDGStatistics">
-						<div class="SDGStatHolder">SDG3: Good Health and Well-Being</div>
-						<div class="SDGStatContent" id="SDG3Holder">
-						</div>
 						<div class="SDGStatHolder">SDG6: Clean Water and Sanitation</div>
 						<div class="SDGStatContent" id="SDG6Holder">
+							<div id="S6R1">Access Water for All</div>
+							<div id="S6R2">Water Station Services</div>
+							<div id="S6R3">Reduced Water Polluton</div>
 						</div>
 						<div class="SDGStatHolder">SDG7: Affordable and Clean Energy</div>
 						<div class="SDGStatContent" id="SDG7Holder">
-						</div>
-						<div class="SDGStatHolder">SDG9: Industry, Innovation, and Infrastructure</div>
-						<div class="SDGStatContent" id="SDG9Holder">
-						</div>
-						<div class="SDGStatHolder">SDG11: Sustainable Cities and Communities</div>
-						<div class="SDGStatContent" id="SDG11Holder">
+							<div id="S7R1">Cheap Energy Cost</div>
+							<div id="S7R2">Access Energy For All</div>
+							<div id="S7R3">Sustainable Energy Source</div>
+							<div id="S7R4">Modern Energy</div>
 						</div>
 						<div class="SDGStatHolder">SDG12: Responsible Consumption and Production</div>
 						<div class="SDGStatContent" id="SDG12Holder">
+							<div id="S12R1">Reduced Carbon Emissions</div>
+							<div id="S12R2">Reduced Waste</div>
 						</div>
 						<div class="SDGStatHolder">SDG13: Climate Action</div>
 						<div class="SDGStatContent" id="SDG13Holder">
+							MEET SDG7/12
 						</div>
 					</div>
 				</div>
@@ -164,7 +166,13 @@
 				</div>
 				<span class="dialogTitle">About</span>
 				<div class="dialogTextHolder">
-						<p>soon</p>
+					<p>
+					Due to a lack of emphasis on sustainability, millions around the world suffer from issues that could be reduced immensely through global cooperation. These issues include issues that you, as a global citizen, have heard about or may even experience ranging from poverty and economic growth to climate change and sanitation. The United Nations has led a tremendous effort to increase global cooperation to solve these issues by introducing the 17 Sustainable Development Goals. However, introducing them is simply not enough to ensure we have a brighter, better, and cleaner future. We need to act by them, and the first step to doing so is to have awareness about the goals. 
+					</p>
+					<p>
+					Thus, that brings us to you and me, global citizens of this big, beautiful world. We can do a lot to help. Through the Urban Sustainability Game, you’ll not only learn about the several different SDGs we’ve selected but also have the chance to experience  what it’s like to be a leader.
+					</p>
+					<p>In this role, you’ll be given a village, town, or city, 2 UN Sustainable Development Goals, and 15 years to successfully develop your area. You must stay out of debt and achieve both goals to be a sustainable leader with a sustainable city. Are you up to the challenge?</p>
 				</div>
 				<button class="material-symbols-outlined close">close</button>
 			</dialog>
@@ -257,9 +265,17 @@
 			<button id="funFactBtn">!</button>
 		</content>
 		<content id="gameInterface">
+			<div id="gameOver">
+				<span id="gameOverTitle">Game Over</span>
+				<span id="results">You emerged <b>victorious!</b> Thanks for making this city more sustainable than ever!</span>
+				<span id="finalScore">Final Score: 123456789.. yeah (there's no real system in a demo)</span>
+				
+				<button id="returnToMenu">Return (Refresh)</button>
+				<button id="hideMenu">Hide Menu</button>
+			</div>
 			<div id="gameStatus">
 				<div>
-					<button id="returnMenu" class="material-symbols-outlined">
+					<button id="returnMenu" class="material-symbols-outlined hidden">
 						arrow_back
 					</button>
 					<div id="gameCurrency">

@@ -16,7 +16,8 @@ const gameEnum = (function() {
 			offices : 2,
 			school : 1,
 			commercialStore : 1,
-			policeStation: 1
+			policeStation: 1,
+			powerStation: 1
 		},
 		
 		town : {
@@ -31,7 +32,8 @@ const gameEnum = (function() {
 			factory : 5,
 			school: 2,
 			offices: 3,
-			policeStation: 1
+			policeStation: 1,
+			powerStation: 2
 		},
 		
 		city : {
@@ -49,7 +51,8 @@ const gameEnum = (function() {
 			residentialPark : 4,
 			groceryStore : 3,
 			gasStation : 6,
-			policeStation: 2
+			policeStation: 2,
+			powerStation : 2
 		}
 	}
 	
@@ -67,16 +70,16 @@ const gameEnum = (function() {
 	
 	const baseConfig = {
 		village: {
-			budget : 20000,
-			yearlyDue : 5000,
+			budget : 10000,
+			yearlyDue : 3000,
 		},
 		town: {
-			budget : 200000,
-			yearlyDue : 20000,
+			budget : 30000,
+			yearlyDue : 30000,
 		},
 		city: {
-			budget : 20000,
-			yearlyDue : 400000
+			budget : 200000,
+			yearlyDue : 500000
 		},
 		
 	}
@@ -286,6 +289,12 @@ class Zone {
 				if (!property) {
 					continue;
 				}
+				
+				if (this.type.includes("factory")) {
+					if (property.type != "stateRoute") {
+						continue;
+					}
+				}
 
 				if ((property.type != "") && (property.isCommercial)) {
 					return [x,propertyCornerY - l,l];
@@ -305,6 +314,12 @@ class Zone {
 
 				if (!property) {
 					continue;
+				}
+				
+				if (this.type.includes("factory")) {
+					if (property.type != "stateRoute") {
+						continue;
+					}
 				}
 
 				if ((property.type != "") && (property.isCommercial)) {
@@ -326,6 +341,12 @@ class Zone {
 				if (!property) {
 					continue;
 				}
+				
+				if (this.type.includes("factory")) {
+					if (property.type != "stateRoute") {
+						continue;
+					}
+				}
 
 				if ((property.type != "") && (property.isCommercial)) {
 					return [x,yOppOffset,l];
@@ -345,6 +366,12 @@ class Zone {
 
 				if (!property) {
 					continue;
+				}
+				
+				if (this.type.includes("factory")) {
+					if (property.type != "stateRoute") {
+						continue;
+					}
 				}
 
 				if ((property.type != "") && (property.isCommercial)) {
@@ -425,7 +452,9 @@ Zone.prototype.zoneTypes = {
 
 		carbonEmissions : 0.2,
 		wasteEmissions : 0.2,
-		text: "house"
+		text: "house",
+		common: "Neighborhood",
+		yearlyCost: 200
 	},
 	gasStation : {
 		height: 1,
@@ -439,7 +468,9 @@ Zone.prototype.zoneTypes = {
 
 		carbonEmissions : 0.5,
 		wasteEmissions : 0.1,
-		text : "local_gas_station"
+		text : "local_gas_station",
+		common: "Gas Station",
+		yearlyCost: 500
 	},
 	groceryStore : {
 		height: 2,
@@ -453,7 +484,9 @@ Zone.prototype.zoneTypes = {
 
 		carbonEmissions : 0.2,
 		wasteEmissions : 0.4,
-		text : "grocery"
+		text : "grocery",
+		common: "Grocery Store",
+		yearlyCost: 750
 	},
 	residentialPark : {
 		width: 2,
@@ -467,12 +500,14 @@ Zone.prototype.zoneTypes = {
 
 		carbonEmissions : 0,
 		wasteEmissions : 0.1,
-		text : "park"
+		text : "park",
+		common: "Residential Park",
+		yearlyCost: 150
 	},
 	factory : {
 		type : "factory",
 		color : "#4F1271",
-		influence : 4.5,
+		influence : 4,
 		isDestroyable : true,
 		canGenerateRoad : true,
 		isCommercial : false, // to prevent connection,
@@ -484,7 +519,8 @@ Zone.prototype.zoneTypes = {
 		
 		carbonEmissions : 0.6,
 		wasteEmissions : 0.6,
-		text : "manufacturing"
+		text : "manufacturing",
+		common: "Low-Tech Factory"
 	},
 	offices : {
 		width: 1,
@@ -498,7 +534,9 @@ Zone.prototype.zoneTypes = {
 		
 		carbonEmissions : 0.3,
 		wasteEmissions : 0.3,
-		text : "meeting_room"
+		text : "meeting_room",
+		common: "Offices",
+		yearlyCost: 500
 	},
 	commercialStore : {
 		width: 2,
@@ -512,7 +550,9 @@ Zone.prototype.zoneTypes = {
 		
 		carbonEmissions : 0.2,
 		wasteEmissions : 0.1,
-		text : "shopping_cart"
+		text : "shopping_cart",
+		common: "Commercial Store",
+		yearlyCost: 900
 	},
 	school : {
 		width: 3,
@@ -526,7 +566,9 @@ Zone.prototype.zoneTypes = {
 		
 		carbonEmissions : 0.3,
 		wasteEmissions : 0.3,
-		text : "school"
+		text : "school",
+		common: "School",
+		yearlyCost: 200
 	},
 	stateRoute : {
 		type : "stateRoute",
@@ -535,7 +577,9 @@ Zone.prototype.zoneTypes = {
 
 		incomeGenerate : 50,
 		carbonEmissions : 0.1,
-		text : ""
+		text : "",
+		common: "State Route",
+		yearlyCost: 50
 	},
 	cbd : {
 		type : "cbd",
@@ -544,7 +588,9 @@ Zone.prototype.zoneTypes = {
 
 		incomeGenerate : 1000,
 		incomeBoost : 10,
-		text : "location_city"
+		text : "location_city",
+		common: "Downtown",
+		yearlyCost: 800
 	},
 	commercialMall : {
 		height: 4,
@@ -556,7 +602,9 @@ Zone.prototype.zoneTypes = {
 		
 		wasteEmissions: 0.3,
 		carbonEmissions: 0.3,
-		text: "local_mall"
+		text: "local_mall",
+		common: "Commercial Mall",
+		yearlyCost: 4000
 	},
 	fastFoodChain : {
 		influence: 3,
@@ -566,7 +614,9 @@ Zone.prototype.zoneTypes = {
 		
 		wasteEmissions : 0.2,
 		carbonEmissions : 0.2,
-		text: "fastfood"
+		text: "fastfood",
+		common: "Fast Food Chain",
+		yearlyCost: 350
 	},
 	restaurant: {
 		influence: 2,
@@ -576,7 +626,9 @@ Zone.prototype.zoneTypes = {
 		
 		wasteEmissions: 0.5,
 		carbonEmissions : 0.1,
-		text: "restaurant"
+		text: "restaurant",
+		common: "Restaurant",
+		yearlyCost: 1200
 	},
 	apartment: {
 		influence: 3,
@@ -594,7 +646,9 @@ Zone.prototype.zoneTypes = {
 		
 		wasteEmissions: 0.4,
 		carbonEmissions: 0.3,
-		text: "apartment"
+		text: "apartment",
+		common: "Apartment",
+		yearlyCost: 3000
 	},
 	policeStation: {
 		influence: 2,
@@ -611,7 +665,9 @@ Zone.prototype.zoneTypes = {
 		
 		wasteEmissions: 0.2,
 		carbonEmissions: 0.2,
-		text: "local_police"
+		text: "local_police",
+		common: "Police Station",
+		yearlyCost: 500
 	},
 	brt: {
 		influence: 2,
@@ -631,7 +687,8 @@ Zone.prototype.zoneTypes = {
 		
 		wasteEmissions: 0,
 		carbonEmissions:  0.4,
-		text: "directions_bus"
+		text: "directions_bus",
+		common: "BRT Service",
 	},
 	highTechFactory : {
 		influence: 6,
@@ -643,11 +700,12 @@ Zone.prototype.zoneTypes = {
 		isDestroyable: false,
 		
 		incomeGenerate: 5000,
-		yearlyCost: 20000,
+		yearlyCost: 50000,
 		
 		wasteEmissions: 0.2,
 		carbonEmissions: 0,
-		text: "conveyor_belt"
+		text: "conveyor_belt",
+		common: "High-Tech Factory"
 	},
 	waterStation : {
 		influence: 0,
@@ -658,13 +716,47 @@ Zone.prototype.zoneTypes = {
 		isCommercial : true,
 		isDestroyable: false,
 		
-		incomeGenerate: 300,
-		yearlyCost: 700,
+		incomeGenerate: 500,
+		yearlyCost: 1000,
 		
 		wasteEmissions: 0.6,
 		carbonEmissions: 0.2,
-		text: "water_drop"
+		text: "water_drop",
+		common: "Water Station"
 	},
+	powerStation : {
+		type: "powerStation",
+		color: "#eb4034",
+		
+		isCommercial : true,
+		isDestroyable : false,
+		
+		incomeGenerate : 400,
+		yearlyCost : 1500,
+		
+		wasteEmissions:0,
+		carbonEmissions: 0.5,
+		text: "bolt",
+		common: "Power Station"
+	},
+	recyclingCenter : {
+		type : "recyclingCenter",
+		color: "#269600",
+		
+		isCommercial : true,
+		isDestroyable : false,
+		
+		incomeGenerate: 500,
+		yearlyCost: 700,
+		
+		wasteEmissions : 0,
+		carbonEmissions: 0.1,
+		text: "recycling",
+		
+		width: 2,
+		height: 2,
+		common: "Recycling Center"
+	}
 }
 
 // Street
@@ -702,8 +794,7 @@ class Street {
 		switch (direction) {
 			case "N":
 				for (let y = y1;y < y1 + spaces;y++) {
-					const street = new Street();
-					street.influence = influence;
+					const street = new Street({influence: influence,type: this.type,hasBusStop : this.hasBusStop,hasBikeLane : this.hasBikeLane});
 					streetPropertyData[x1][y] = street;
 					influence -= 0.5;
 					console.log(direction,"New Influence:",influence,"// Location:",x1, y,"// Item:", street);
@@ -711,8 +802,7 @@ class Street {
 				return streetPropertyData;
 			case "E":
 				for (let x = x1;x < x1 + spaces;x++) {
-					const street = this;
-					street.influence = influence;
+					const street = new Street({influence: influence,type: this.type,hasBusStop : this.hasBusStop,hasBikeLane : this.hasBikeLane});
 					streetPropertyData[x][y1] = street;
 					influence -= 0.5;
 					console.log(direction,"New Influence:",influence,"// Location:",x, y1,"// Item:", street);
@@ -720,8 +810,8 @@ class Street {
 				return streetPropertyData;
 			case "S":
 				for (let y = y1;y >= y1 - spaces;y--) {
-					const street = this;
-					street.influence = influence;
+					const street = new Street({influence: influence,type: this.type,hasBusStop : this.hasBusStop,hasBikeLane : this.hasBikeLane});
+
 					streetPropertyData[x1][y] = street;
 					influence -= 0.5;
 					console.log(direction,"New Influence:",influence,"// Location:",x1, y,"// Item:", street);
@@ -729,8 +819,7 @@ class Street {
 				return streetPropertyData;
 			case "W":
 				for (let x = x1;x >= x1 - spaces;x--) {
-					const street = this;
-					street.influence = influence;
+					const street = new Street({influence: influence,type: this.type,hasBusStop : this.hasBusStop,hasBikeLane : this.hasBikeLane});
 					streetPropertyData[x][y1] = street;
 					influence -= 0.5;
 					console.log(direction,"New Influence:",influence,"// Location:",x, y1,"// Item:", street);
@@ -812,9 +901,11 @@ class SDG {
 						this.base[item] = getRandomIntInclusive(parseInt(rule[1]),parseInt(rule[2]));
 						break;
 					default:
-						this.base[item] = parseFloat(rule[0]);
+						this.base[item] = SDG.prototype.SDGList[this.id][mapSize][item];
 				}
 			} else if (typeof rule === "boolean") {
+				this.base[item] = rule;
+			} else {
 				this.base[item] = rule;
 			}
 		}
@@ -836,19 +927,40 @@ class SDG {
 		}
 	}
 	
-	meetsRequirement(requirement) {
-		switch (this.requirements[requirement][0]) {
-			case ">":
-				return this.base[requirement] >= this.requirements[requirement][1];
-				break;
-			case "=":
-				return this.base[requirement] == this.requirements[requirement][1];
-				break;
-			case "<":
-				return this.base[requirement] <= this.requirements[requirement][1];
-				break;
+	meetsRequirement(requirement,sdgLink) {
+		if (typeof this.requirements[requirement] === "string") {
+			let text = this.requirements[requirement].split("-");
+			if (text[0] == "link") {
+				console.log(sdgLink.requirements[requirement][0]);
+				switch (sdgLink.requirements[requirement][0]) {
+					case ">":
+						return sdgLink.base[requirement] >= sdgLink.requirements[requirement][0];
+						break;
+					case "=":
+						return sdgLink.base[requirement] == sdgLink.requirements[requirement][0];
+						break;
+					case "<":
+						return sdgLink.base[requirement] <= sdgLink.requirements[requirement][0];
+						break;
+				}
+				return false;
+				}
+		} else if (typeof this.requirements[requirement] === "boolean") {
+			return this.base[requirement] == this.requirements[requirement];
+		} else {
+			switch (this.requirements[requirement][0]) {
+				case ">":
+					return this.base[requirement] >= this.requirements[requirement][1];
+					break;
+				case "=":
+					return this.base[requirement] == this.requirements[requirement][1];
+					break;
+				case "<":
+					return this.base[requirement] <= this.requirements[requirement][1];
+					break;
+			}
+			return false;
 		}
-		return false;
 	}
 }
 
@@ -866,6 +978,18 @@ SDG.prototype.SDGList = {
 			accessEnergy : "households-0.5",
 			energySustainable : false,
 			modernEnergy : true
+		}
+	},
+	12 : {
+		town : {
+			carbonEmissions: "random-500-600",
+			wasteDay : 15
+		}
+	},
+	13 : {
+		town : {
+			carbonEmissions: "link-12",
+			energySustainable : "link-7",
 		}
 	}
 }
@@ -885,11 +1009,23 @@ SDG.prototype.SDGGoal = {
 			energySustainable : true,
 			modernEnergy : true,
 		}
+	},
+	12 : {
+		town : {
+			carbonEmissions: ["<",200],
+			wasteDay : ["<",5]
+		}
+	},
+	13 : {
+		town : {
+			carbonEmissions: "link-12",
+			energySustainable : "link-7",
+		}
 	}
 }
 
 SDG.prototype.actionCardList = {
-	"Add BRT Service" : {
+	/*"Add BRT Service" : {
 		cost : 50000,
 		oneTime : true,
 		description : "Create a new Bus Rapid Tranist service for nearby residents.",
@@ -911,7 +1047,7 @@ SDG.prototype.actionCardList = {
 		description : "Upgrade the existing service to an electric service.",
 		required : "BRT Service, 3 Bus Stops",
 		type : "transportation",
-		icon : "bolt"
+		icon : "ev_station"
 	},
 	"Add Electric Bus Stops" : {
 		cost : 4000,
@@ -920,9 +1056,9 @@ SDG.prototype.actionCardList = {
 		required : "Electric BRT Service",
 		type : "transportation",
 		icon : "electrical_services"
-	},
+	},*/
 	"Improve Water Pipeline" : {
-		cost : 3000,
+		cost : 4000,
 		oneTime : true,
 		description : "Improve the existing water pipeline system for ALL residents.",
 		required : "None",
@@ -932,15 +1068,15 @@ SDG.prototype.actionCardList = {
 	"Build Water Stations" : {
 		cost : 10000,
 		oneTime : false,
-		description : "Create 4 water stations around the place (MAX 2)",
+		description : "Create one water station around the hinterland to help more residents gain access to water! (MAX 10)",
 		required : "Improve Water Pipeline",
 		type : "water",
 		icon : "water_drop"
 	},
 	"Improve Filtration System" : {
 		cost : 20000,
-		oneTime : false,
-		description : "Improves the filtration system for ALL residents (Warning: 50% to work/break per year).",
+		oneTime : true,
+		description : "Improve the filtration system for ALL residents! (Warning: 50% to break per year).",
 		required : "None",
 		type : "water",
 		icon: "filter_alt"
@@ -956,8 +1092,8 @@ SDG.prototype.actionCardList = {
 	"Sustainable Energy Act" : {
 		cost : 500,
 		oneTime : true,
-		description : "Implements sustainable energy changes and helps reduce pollution (Warning: Costs 500 UNd per year)",
-		required : "None",
+		description : "Implements sustainable energy changes and helps reduce pollution by investing into sustainable resources. (Costs 500UND per year, prices jump to 4000UND after 2 years)",
+		required : "Affordable Energy Act",
 		type : "acts",
 		icon: "solar_power"
 	},
@@ -970,21 +1106,29 @@ SDG.prototype.actionCardList = {
 		icon: "factory"
 	},
 	"Create High-Tech Factory" : {
-		cost : 2000,
+		cost : 13000,
 		oneTime : false,
 		description : "Create a new high-tech and more sustainable factory for 5000 UND per month!",
 		required : "Affordable Energy Act",
 		type : "manufacturing",
 		icon: "conveyor_belt"
 	},
+	"Power Station" : {
+		cost: 5000,
+		oneTime : false,
+		description : "Create a new power statino so that more residents can get power!",
+		required : "None",
+		type : "manufacturing",
+		icon : "bolt"
+	},
 	"Add Recycling Center" : {
 		cost : 20000,
-		oneTime : true,
+		oneTime : false,
 		description : "Create a recycling center at a random location.",
 		required : "None",
 		type : "manufacturing",
 		icon : "recycling"
-	},
+	},/*
 	"Add Police Officers" : {
 		cost : 100,
 		oneTime : false,
@@ -1008,7 +1152,7 @@ SDG.prototype.actionCardList = {
 		required : "None",
 		type : "social",
 		icon: "shopping_cart"
-	},
+	},*/
 	"Emergency Funding" : {
 		cost : 0,
 		oneTime : true,
