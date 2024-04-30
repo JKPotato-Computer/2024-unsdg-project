@@ -204,6 +204,11 @@ div#gameButtons {
     bottom: 32px;
     width: 100%;
     gap: 16px;
+	opacity: 0.3;
+}
+
+div#gameButton:hover {
+	opacity: 1;
 }
 
 div#gameButtons button {

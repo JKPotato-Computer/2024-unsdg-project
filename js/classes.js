@@ -737,7 +737,8 @@ Zone.prototype.zoneTypes = {
 		wasteEmissions:0,
 		carbonEmissions: 0.5,
 		text: "bolt",
-		common: "Power Station"
+		common: "Power Station",
+		influence: 1
 	},
 	recyclingCenter : {
 		type : "recyclingCenter",
@@ -755,7 +756,8 @@ Zone.prototype.zoneTypes = {
 		
 		width: 2,
 		height: 2,
-		common: "Recycling Center"
+		common: "Recycling Center",
+		influence: 1
 	}
 }
 
