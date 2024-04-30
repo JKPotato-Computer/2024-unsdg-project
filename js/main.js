@@ -1,7 +1,7 @@
 let activePage = "gameMenu";
 let mapScale = 1;
 let availableMapScales = ["Village","Town","City"]
-let autoOpen = true;
+let autoOpen = false;
 
 function switchMenu(page) {
     let previouslyActivePage = activePage;
