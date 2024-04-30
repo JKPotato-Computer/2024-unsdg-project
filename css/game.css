@@ -204,6 +204,7 @@ div#gameButtons {
     bottom: 32px;
     width: 100%;
     gap: 16px;
+    opacity: 0.3;
 }
 
 div#gameButtons button {
