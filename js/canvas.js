@@ -268,6 +268,8 @@ function animate(){
         dataDouble = true;
     }
 
+	handleGameGrid();
+	
     if(dataDouble){
         for(let i = 0; i < buildingSet.length; i++){
             buildingSet[i].update(ctx);
@@ -291,8 +293,6 @@ function animate(){
             if(timer === 3){player.update(input);}
             player.draw(ctx);
         }
-		
-		handleGameGrid();
 		
         float.draw(ctx);
         text.update();
