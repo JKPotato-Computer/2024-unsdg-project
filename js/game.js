@@ -499,7 +499,7 @@ const game = (function() {
 						}
 
 						if (gameData.date.year - gameData.playedActionCards["Affordable Energy Act"].boughtFrom == 3) {
-							gameData.playedActionCards["Sustainable Energy Act"].sustainableActUsable = true;
+							gameData.playedActionCards["Affordable Energy Act"].sustainableActUsable = true;
 							notify("You may now use Sustainable Energy Act!",8000);
 						}
 					}
