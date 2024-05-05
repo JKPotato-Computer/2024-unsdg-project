@@ -1,132 +1,337 @@
-<!doctype html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
-	<title>APHUG Finals</title>
-	<link href="css/homePage.css" rel="stylesheet">
-	<link href="css/modals.css" rel="stylesheet">
-	<link href="css/testEnvironment.css" rel="stylesheet">
-	
-	<script src="js/database.js"></script>
-	<script defer src="js/testHandler.js"></script>
-	<script defer src="js/testEnvironment.js"></script>
-	<script defer src="js/webFlow.js"></script>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-	
-</head>
-<body>
-	<div id="startPage">
-		<div id="leftNav">
-			<div id="title">AP HuG: Test Bank</div>
-			<div id="verticalHolder">
-				<div id="startNewTest" class="optionSelected">
-					<span class="material-icons-outlined">quiz</span>
-					<span>Assessments</span>
-				</div>
-				<div id="testHistory">
-					<span class="material-icons-outlined">insights</span>
-					<span>Reports</span>
-				</div>
-			</div>
-			<div id="sideBar">
-				<div id="testSideBar">
-					<div class="selected">Create</div>
-					<div>Active</div>
-				</div>
-				<div id="testSideBar" style="display: none;">
-					<div>Results</div>
-				</div>
-			</div>
-		</div>
-		<div id="optionPages">
-			<div id="createTestPage" class="fullScreen">
-				<h2>Create Test</h3>
-				<span id="warning">ALERT: THIS SITE WILL ONLY BE AVAILABLE UNTIL MAY 7TH 2024 AT 1:00 PM CST. THIS STIE WILL BE TAKEN DOWN AFTER THIS PERIOD.</span>
-				<span>IMPORTANT: Some questions may have <b>INCORRECT/DUPLICATED</b> answers (likely due to a misclick while scraping questions). <br> If you notice one, notify me / send a pull request ASAP. Thank you!!</span>
-				<label for="testCategories">Test Cycles</label>
-				<select id="testCategories">
-					<option value="semester1" selected>Semester 1</option>
-					<option value="full ">Full (ALL UNITS)</option>
-					<option value="cycle1">Unit 1</option>
-					<option value="cycle2">Unit 2</option>
-					<option value="cycle3"r>Unit 3</option>
-					<option value="cycle4">Unit 4</option>
-					<option value="cycle5">Unit 5</option>
-					<option value="cycle6">Unit 6</option>
-				</select>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8">
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Urban Sustainability Game</title>
+		<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+ 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+		<link rel="stylesheet" href="css/global.css">
+		<link rel="stylesheet" href="css/game.css">
+		<link rel="stylesheet" href="css/menu.css">
+		<link rel="icon" href="resources/SDGLogo.png">
 		
-				<label for="testQuestionNo">Number of Questions</label>
-				<input type="number" id="testQuestionNo" placeholder="20" max="120" min="10" step="1" value="20">
+		<script src="js/classes.js"></script>
+		<script src="js/logic.js"></script>
+		<script src="js/canvas.js" defer></script>
+		<script src="js/game.js" defer></script>
+		<script src="js/main.js" defer></script>
 		
-				<input type="button" id="startTest" value="Start">
-			</div>
+		<script>
+			window.addEventListener("load",() => {
+				document.querySelector("#preloader").className = "dissapear";
+				setTimeout(function() {
+					document.querySelector("#preloader").className = "inactive";
+				},1000)
+			})
+		</script>
+	</head>
 
-			<div id="activeTestPage" class="fullScreen" style="display: none;">
-				<h3>Active Tests</h3>
-				<span>These tests are currently active and running in the background. You can always continue or cancel at anytime.</span>
+	<body>
+		<img src="resources/floatImg.png" id="floatImg" alt="">
+		<div id="notificationHolder">
+		</div>
+		<dialog id="actionCards">
+			<div class="gameColorsBar">
+				<div class="colorBar" style="--color: #4c9e38"></div>
+				<div class="colorBar" style="--color: #25bde2"></div>
+				<div class="colorBar" style="--color: #fbc30a"></div>
+				<div class="colorBar" style="--color: #fe6925"></div>
+				<div class="colorBar" style="--color: #fd9d24"></div>
+				<div class="colorBar" style="--color: #c08b2f"></div>
+				<div class="colorBar" style="--color: #3f7e45"></div>
 			</div>
+			<span class="dialogTitle">Action Cards</span>
+			<button class="material-symbols-outlined close">close</button>
+			<p>Click on an action card to execute it. <b>WARNING! You can still buy it even if you can't afford it, this <u>will be added to your debt, and will double every year you fail to pay it.</u> (NOTE: Transportation is not available at this time.)</b></p>
+			<div>
+				<span class="categoryTitle">Transportation</span>
+				<div class="categoryHolder" id="transportation">
+				</div>
+				<span class="categoryTitle">Water Service</span>
+				<div class="categoryHolder" id="water">
+				</div>
+				<span class="categoryTitle">Bill Acts</span>
+				<div class="categoryHolder" id="acts">
+				</div>
+				<span class="categoryTitle">Manufacturing Service</span>
+				<div class="categoryHolder" id="manufacturing">
+				</div>
+				<span class="categoryTitle">Social Service</span>
+				<div class="categoryHolder" id="social">
+				</div>
+			</div>
+		</dialog>
+		<dialog id="gameStatistics">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
+				</div>
+				<span class="dialogTitle">Municipal Report</span>
+				<button class="material-symbols-outlined close">close</button>
+				<div>
+					<div id="gameOverallStatistics">
+						<img id="gameImageStatistics">
+						<span id="elapsedTime">Elapsed Time: <b>0:00</b></span>
+						<span id="totalIncomeGenerated">Total Income Generated: <b>$0</b></span>
+						<span id="totalExpenses">Total Expenses: <b>$0</b></span>
+						<hr>
+						<span id="preLfinalScore">Score: <b>0</b></span>
+					</div>
+					<div id="gameSDGStatistics">
+						<div class="SDGStatHolder">SDG6: Clean Water and Sanitation</div>
+						<div class="SDGStatContent" id="SDG6Holder">
+							<div id="S6R1">Access Water for All</div>
+							<div id="S6R2">Water Station Services</div>
+							<div id="S6R3">Reduced Water Polluton</div>
+						</div>
+						<div class="SDGStatHolder">SDG7: Affordable and Clean Energy</div>
+						<div class="SDGStatContent" id="SDG7Holder">
+							<div id="S7R1">Cheap Energy Cost</div>
+							<div id="S7R2">Access Energy For All</div>
+							<div id="S7R3">Sustainable Energy Source</div>
+							<div id="S7R4">Modern Energy</div>
+						</div>
+						<div class="SDGStatHolder">SDG12: Responsible Consumption and Production</div>
+						<div class="SDGStatContent" id="SDG12Holder">
+							<div id="S12R1">Reduced Carbon Emissions</div>
+							<div id="S12R2">Reduced Waste</div>
+						</div>
+						<div class="SDGStatHolder">SDG13: Climate Action</div>
+						<div class="SDGStatContent" id="SDG13Holder">
+							MEET SDG7/12
+						</div>
+					</div>
+				</div>
+		</dialog>
+		<dialog id="dictionary">
+			<div class="gameColorsBar">
+				<div class="colorBar" style="--color: #4c9e38"></div>
+				<div class="colorBar" style="--color: #25bde2"></div>
+				<div class="colorBar" style="--color: #fbc30a"></div>
+				<div class="colorBar" style="--color: #fe6925"></div>
+				<div class="colorBar" style="--color: #fd9d24"></div>
+				<div class="colorBar" style="--color: #c08b2f"></div>
+				<div class="colorBar" style="--color: #3f7e45"></div>
+			</div>
+			<button class="material-symbols-outlined back" id="dictionaryBack">arrow_back
+				<span class="toolTip">Back</span>
+			</button>
+			<span class="dialogTitle">Guide</span>
+			<button class="material-symbols-outlined close">close</button>
+			<iframe id="guideIF" title="Guide" src="resources/Guide/guide.html"></iframe>
+		</dialog>
+		<div id="preloader"> 
+			<div class="loader"></div> 
+		</div> 
+		<content id="gameMenu" class="active">
+			<dialog id="gameCredits">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
+				</div>
+				<span class="dialogTitle">Credits</span>
+				<div class="dialogTextHolder">
+					<p>Special Thanks to: that one AP® Human Geography teacher for feedback/playtesting!</p>
+					<hr>
+					<p>Graphics sourced from:</p>
+					<ul>
+						<li><a href="https://pixabay.com">PixaBay (Images)</a></li>
+						<li><a href="https://fonts.google.com">Google Fonts (Typeface, Icons)</a></li>
+						<li>All UN assets sourced from <a href="https://www.un.org/sustainabledevelopment">UNSDG Goals</a> under <a href="https://www.un.org/sustainabledevelopment/wp-content/uploads/2019/01/SDG_Guidelines_AUG_2019_Final.pdf">respective guidelines</a></li>
+					</ul>
+				</div>
+				<button class="material-symbols-outlined close">close</button>
+			</dialog>
+			<dialog id="gameAbout">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
+				</div>
+				<span class="dialogTitle">About</span>
+				<div class="dialogTextHolder">
+					<p>
+					Due to a lack of emphasis on sustainability, millions around the world suffer from issues that could be reduced immensely through global cooperation. These issues include issues that you, as a global citizen, have heard about or may even experience ranging from poverty and economic growth to climate change and sanitation. The United Nations has led a tremendous effort to increase global cooperation to solve these issues by introducing the 17 Sustainable Development Goals. However, introducing them is simply not enough to ensure we have a brighter, better, and cleaner future. We need to act by them, and the first step to doing so is to have awareness about the goals. 
+					</p>
+					<p>
+					Thus, that brings us to you and me, global citizens of this big, beautiful world. We can do a lot to help. Through the Urban Sustainability Game, you’ll not only learn about the several different SDGs we’ve selected but also have the chance to experience  what it’s like to be a leader.
+					</p>
+					<p>In this role, you’ll be given a village, town, or city, 2 UN Sustainable Development Goals, and 15 years to successfully develop your area. You must stay out of debt and achieve both goals to be a sustainable leader with a sustainable city. Are you up to the challenge?</p>
+				</div>
+				<button class="material-symbols-outlined close">close</button>
+			</dialog>
+			<div id="backgroundImageHolder"></div>
+			<div id="titleContentHolder">
+				<div id="logoHolder">
+					<a href="https://sdgs.un.org" target="_blank"><img src="resources/SDGLabel.png" id="logo"></a>
+					<div>
+						<div class="logoBar"></div>
+						<div class="logoText">THE GAME</div>
+						<div class="logoBar"></div>
+					</div>
+				</div>
 
-			<div id="resultTestPage" class="fullScreen" style="display: none;">
-				<h3>Test History</h3>
-				<span>See what you have got on the previouo tests and their scores!</span>
-			</div>
-		</div>
-	</div>
-	
-	<div id="examPage">
-		<div id="topBar">
-			<div id="questionsBar">
-			</div>
-			<div id="infoBar">
-				<span id="timeLeft">0:00</span>
-				<input type="button" id="submitQuestions" value="Submit">
-				<span id="currentQuestion">1 of 40</span>
-			</div>
-		</div>
-		<div id="lessThan5Minutes">Less than 5 minutes remaining</div>
-		<content>
-			<div id="questionNumberBar">
-				<span id="questionNumberText"></span>
-			</div>
+				<div id="buttonList">
+					<button id="viewMenu" class="menuButton">Play</button>
+					<button id="credits" class="menuButton">Credits</button>
+					<button id="about" class="menuButton">About</button>
+				</div>
 			
-			<div id="imageHolder"><img id="mainImage"></img></div>
-			
-			<div id="questionText"></div>
-			
-			<div id="answerOptions">
-				<div id="answerChoice1">
-					<div id="choice1" name="answerChoices">A</div>
-					<span id="choice1Description"></span>
-				</div>
-				<div id="answerChoice2">
-					<div id="choice2" name="answerChoices">B</div>
-					<span id="choice2Description"></span>
-				</div>
-				<div id="answerChoice3">
-					<div id="choice3" name="answerChoices">C</div>
-					<span id="choice3Description"></span>
-				</div>
-				<div id="answerChoice4">
-					<div id="choice4" name="answerChoices">D</div>
-					<span id="choice4Description"></span>
-				</div>
-				<div id="answerChoice5">
-					<div id="choice5" name="answerChoices">E</div>
-					<span id="choice5Description"></span>
-				</div>
+				<span id="disclaimer"><b>DISCLAIMER:</b> The content of this publication has not been approved by the United Nations and does not reflect the views of the United Nations, its officials, or Member States.
+					<br>
+					Submission for the <a href="https://gnec-hackathon-2024.devpost.com/">2024 GNEC Hackathon</a>.
+				</span>
 			</div>
 		</content>
-		
-		<div id="answerFeedback" style="display: none;"></div>
-		
-		<div id="switchQuestions">
-			<button id="previousQuestion" class="locked"><span class="material-icons-outlined">arrow_back</button>
-			<button id="nextQuestion"><span class="material-icons-outlined">arrow_forward</button>
-		</div>
-	</div>
-</body>
+		<content id="gameOptions">
+			<dialog id="errorLoading">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
+				</div>
+				<span class="dialogTitle">Error: Unavailable</span>
+				<p>This feature is unavailable due to limited time constraints on this project.<br>Check back later!</p>
+				<button class="material-symbols-outlined close">close</button>
+			</dialog>
+			<dialog id="centralPlaceTheory">
+				<div class="gameColorsBar">
+					<div class="colorBar" style="--color: #4c9e38"></div>
+					<div class="colorBar" style="--color: #25bde2"></div>
+					<div class="colorBar" style="--color: #fbc30a"></div>
+					<div class="colorBar" style="--color: #fe6925"></div>
+					<div class="colorBar" style="--color: #fd9d24"></div>
+					<div class="colorBar" style="--color: #c08b2f"></div>
+					<div class="colorBar" style="--color: #3f7e45"></div>
+				</div>
+				<span class="dialogTitle">Central Place Theory</span>
+				<p>
+					This menu design was inspired by the very principles of the Central Place Theory by Walter Christaller, showing the relation of central markets to its hinterland <i>(region of market)</i>. This theory shows the interaction between various villages (smaller hexagons), towns (medium-sized), and cities (center of medium-sized hexagons), and how they interact based off the various ranges, how far people would travel for such services.
+					<br><br>
+					It looks cool though, so that's why its here.
+				</p>
+				<button class="material-symbols-outlined close">close</button>
+			</dialog>
+			
+			<button id="returnTitle" class="material-symbols-outlined">arrow_back</button>
+			<div id="mapSizeSelector">
+				<button id="smallSize" class="material-symbols-rounded">arrow_back_ios</button>
+				<div>
+					<span id="mapSize">Town</span>
+					<span id="highScore">High: <b>0</b></span>
+					<div id="mapSizeHR"></div>
+					<div id="demoWarning">DEMO</div>
+				</div>
+				<button id="largeSize" class="material-symbols-rounded">arrow_forward_ios</button>
+			</div>
+			<div id="mapVisual">
+				<div id="cityScale">
+				</div>
+				<div id="townScale" class="selected">
+				</div>
+				<div id="villageScale">
+				</div>
+			</div>
+			<div id="gameControl">
+				<button id="startGame">
+					<span class="material-symbols-rounded">play_arrow</span>
+					<span>PLAY</span>
+				</button>
+				<button id="settingsBtn">
+					<span class="material-symbols-rounded">settings</span>
+					<span>SETTINGS</span>
+				</button>
+			</div>
+			<button id="funFactBtn">!</button>
+		</content>
+		<content id="gameInterface">
+			<div id="gameOver">
+				<span id="gameOverTitle">Game Over</span>
+				<span id="results">You emerged <b>victorious!</b> Thanks for making this city more sustainable than ever!</span>
+				<span id="finalScore">Final Score: 123456789.. yeah (there's no real system in a demo)</span>
+				
+				<button id="returnToMenu">Return (Refresh)</button>
+				<button id="hideMenu">Hide Menu</button>
+			</div>
+			<div id="gameStatus">
+				<div>
+					<button id="returnMenu" class="material-symbols-outlined hidden">
+						arrow_back
+					</button>
+					<div id="gameCurrency">
+						<div class="currencyHolder">
+							<span id="gameUNDValue" class="currencyText">10000</span>
+							<span class="currencyTitle">UND</span>
+							<span class="material-symbols-outlined currencyIcon">payments</span>
+						</div>
+						<div class="currencyHolder dueHolder">
+							<span id="gameDueValue" class="currencyText">10000</span>
+							<span class="currencyTitle">DUE (this year)</span>
+							<span class="material-symbols-outlined currencyIcon">receipt_long</span>
+						</div>
+						<div class="currencyHolder debtHolder" style="display: none;">
+							<span id="gameDebtValue" class="currencyText">10000</span>
+							<span class="currencyTitle">DEBT</span>
+							<span class="material-symbols-outlined currencyIcon">priority_high</span>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div id="SDGDeadline">
+						<span>DEADLINE FOR SDG: <b>4m 20s</b></span>
+					</div>
+					<div id="SDGList">
+					</div>
+				</div>
+				<div>
+					<div id="gameClock">
+						<span id="gameClockOverlay" class="material-symbols-outlined">clock_loader_20</span>
+						<span id="clockTime">04/24</span>
+					</div>
+					<div id="gameSpeed">
+						<button id="pause" class="material-symbols-rounded inactive">pause</button>
+						<button id="normalSpeed" class="material-symbols-rounded">play_arrow</button>
+						<button id="fastSpeed" class="material-symbols-rounded inactive">fast_forward</button>
+						
+					</div>
+				</div>
+			</div>
+			<canvas id="gameWorld">
+			</canvas>
+			<div id="gameButtons">
+				<button id="viewAnalytics" class="material-symbols-outlined">
+					monitoring
+					<span class="toolTip">Municpial Report</span>
+				</button>
+				<button id="viewActionCards" class="material-symbols-outlined">
+					history_edu
+					<span class="toolTip">Action Cards</span>
+				</button>
+				<button id="guides" class="material-symbols-outlined">
+					dictionary
+					<span class="toolTip">Guide</span>
+				</button>
+			</div>
+		</content>
+	</body>
 </html>
