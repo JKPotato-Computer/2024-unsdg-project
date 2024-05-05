@@ -491,6 +491,11 @@ const game = (function() {
 							getSDGById(7).base.energyCost -= 2;
 							getSDGById(12).base.carbonEmissions += 10;
 						}
+
+						if (gameData.date.year - gameData.playedActionCards["Affordable Energy Act"].boughtFrom == 3) {
+							gameData.playedActionCards["Sustainable Energy Act"].sustainableActUsable = true;
+							notify("You may now use Sustainable Energy Act!",8000);
+						}
 					}
 					
 					if (gameData.playedActionCards["Sustainable Energy Act"]) {
