@@ -341,14 +341,10 @@ const game = (function() {
 				gameData.playedActionCards[card] = realCard;
 				getSDGById(12).base.carbonEmissions += 100;
 				getSDGById(7).base.accessEnergy = (gameData.households * 0.5);
-				 gameData.playedActionCards["Affordable Energy Act"].boughtFrom = gameData.date.year;
 				break;
 			case "Sustainable Energy Act":
 				if (!gameData.playedActionCards["Affordable Energy Act"]) {
 					notify("Error: You need 'Affordable Energy Act' before you can use this product!",5000);
-					return;
-				} else if (!gameData.playedActionCards["Affordable Energy Act"].sustainableActUsable) {
-					notify("Error: You need to wait until you can use this act!",6000)
 					return;
 				}
 			
@@ -410,13 +406,11 @@ const game = (function() {
 				if (recycleCounts < 8) {
 					placePropertyAtRandomLocation("recyclingCenter");
 					canvasThingy.generateBuilding(gameData.mapSize);
-				} else {
-					notify("Error: You have reached the max number of recycling centers.")
 				}
 				break;
 			case "Emergency Funding":
 				gameData.playedActionCards[card] = realCard;
-				gameData.budget += 50000;
+				gameData.budget += 20000;
 				break;
 			case "Power Station":
 				let powerCounts = 0;
@@ -497,11 +491,6 @@ const game = (function() {
 							getSDGById(7).base.energyCost -= 2;
 							getSDGById(12).base.carbonEmissions += 10;
 						}
-
-						if (gameData.date.year - gameData.playedActionCards["Affordable Energy Act"].boughtFrom == 3) {
-							gameData.playedActionCards["Sustainable Energy Act"].sustainableActUsable = true;
-							notify("You may now use Sustainable Energy Act!",8000);
-						}
 					}
 					
 					if (gameData.playedActionCards["Sustainable Energy Act"]) {
@@ -510,10 +499,10 @@ const game = (function() {
 						getSDGById(12).base.wasteDay -= 50;
 						
 						if (gameData.date.year - gameData.playedActionCards["Sustainable Energy Act"].solarPanelsBought == 2) {
-							gameData.yearlyBase += 29500;
+							gameData.yearlyBase += 9500;
 							gameData.playedActionCards["Sustainable Energy Act"].solarPanels = true;
 							getSDGById(7).base.energySustainable = true;
-							notify("ALERT! Solar panels have just been installed, and your fees have increased to 30,000 UND!",8000);
+							notify("ALERT! Solar panels have just been installed, and your fees have increased to 10,000 UND!",8000);
 						}
 					}
 					
@@ -610,10 +599,6 @@ const game = (function() {
 					if (gameData.budget < 0) {
 						gameData.debt += (Math.abs(gameData.budget));
 						gameData.budget = 0;
-					}
-
-					if ((gameData.SDGDeadline <= 120) && (gameData.SDGDeaadline > 60)) {
-						notify("ALERT! SDG DEADLINE IN T-2 MINUTES! Make sure you meet the SDGs in time!")
 					}
 
 				} else {

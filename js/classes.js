@@ -74,8 +74,8 @@ const gameEnum = (function() {
 			yearlyDue : 3000,
 		},
 		town: {
-			budget : 40000,
-			yearlyDue : 25000,
+			budget : 30000,
+			yearlyDue : 30000,
 		},
 		city: {
 			budget : 200000,
@@ -974,13 +974,7 @@ SDG.prototype.SDGList = {
 			numAccessWater : "households-0.2",
 			numWater : "random-20-30",
 			waterPollution : "random-1900-2000",
-		},
-		village : {
-			numAccessWater : "households-0.1",
-			numWater : "random-1-5",
-			waterPollution : "random-2200-2500",
-		},
-
+		}
 	},
 	7 : {
 		town : {
@@ -988,31 +982,16 @@ SDG.prototype.SDGList = {
 			accessEnergy : "households-0.5",
 			energySustainable : false,
 			modernEnergy : true
-		},
-		village : {
-			energyCost: "random-25-30",
-			accessEnergy : "households-0.2",
-			energySustainable : false,
-			modernEnergy : true
-		},
-
+		}
 	},
 	12 : {
 		town : {
 			carbonEmissions: "random-500-600",
 			wasteDay : 15
-		},
-		village : {
-			carbonEmissions : "random-200-300",
-			wasteDay : 5
 		}
 	},
 	13 : {
 		town : {
-			carbonEmissions: "link-12",
-			energySustainable : "link-7",
-		},
-		village : {
 			carbonEmissions: "link-12",
 			energySustainable : "link-7",
 		}
@@ -1021,11 +1000,6 @@ SDG.prototype.SDGList = {
 
 SDG.prototype.SDGGoal = {
 	6 : {
-		village : {
-			numAccessWater : [">","households"],
-			numWater : [">",15],
-			waterPollution : ["<",1000],
-		},
 		town : {
 			numAccessWater : [">","households"],
 			numWater : [">",50],
@@ -1038,34 +1012,19 @@ SDG.prototype.SDGGoal = {
 			accessEnergy : [">","households"],
 			energySustainable : true,
 			modernEnergy : true,
-		},
-		village : {
-			energyCost : ["<",11],
-			accessEnergy : [">","households"],
-			energySustainable : true,
-			modernEnergy : true,
-		},
+		}
 	},
 	12 : {
 		town : {
 			carbonEmissions: ["<",200],
 			wasteDay : ["<",5]
-		},
-		village : {
-			carbonEmissions: ["<",200],
-			wasteDay : ["<",5]
-		},
+		}
 	},
 	13 : {
 		town : {
 			carbonEmissions: "link-12",
 			energySustainable : "link-7",
-		},
-		village : {
-			carbonEmissions: "link-12",
-			energySustainable : "link-7",
-		},
-
+		}
 	}
 }
 
@@ -1159,7 +1118,7 @@ SDG.prototype.actionCardList = {
 		icon: "conveyor_belt"
 	},
 	"Power Station" : {
-		cost: 7000,
+		cost: 5000,
 		oneTime : false,
 		description : "Create a new power statino so that more residents can get power!",
 		required : "None",
@@ -1167,7 +1126,7 @@ SDG.prototype.actionCardList = {
 		icon : "bolt"
 	},
 	"Add Recycling Center" : {
-		cost : 30000,
+		cost : 20000,
 		oneTime : false,
 		description : "Create a recycling center at a random location.",
 		required : "None",
@@ -1201,7 +1160,7 @@ SDG.prototype.actionCardList = {
 	"Emergency Funding" : {
 		cost : 0,
 		oneTime : true,
-		description : "Need quick money? We have 50000 UND for you!",
+		description : "Need quick money? We have 20000 UND for you!",
 		required : "None",
 		type : "social",
 		icon: "medical_services"

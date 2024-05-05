@@ -60,8 +60,8 @@ document.querySelector("#smallSize").addEventListener("click", () => {
 		mapScale--;
 		game.setGameData("mapSize",availableMapScales[mapScale].toLowerCase());
 		document.querySelector("#mapSize").textContent = availableMapScales[mapScale];
-		document.querySelector("#mapSizeHR").style.display = (mapScale > 1) ? "none" : "";
-		document.querySelector("#demoWarning").style.display = (mapScale > 1) ? "none" : "";
+		document.querySelector("#mapSizeHR").style.display = (mapScale != 1) ? "none" : "";
+		document.querySelector("#demoWarning").style.display = (mapScale != 1) ? "none" : "";
 		
 		for (let i = 0;i < availableMapScales.length;i++) {
 			if (i == mapScale) {
@@ -78,8 +78,8 @@ document.querySelector("#largeSize").addEventListener("click", () => {
 		mapScale++;
 		game.setGameData("mapSize",availableMapScales[mapScale].toLowerCase());
 		document.querySelector("#mapSize").textContent = availableMapScales[mapScale];
-		document.querySelector("#mapSizeHR").style.display = (mapScale > 1) ? "none" : "";
-		document.querySelector("#demoWarning").style.display = (mapScale > 1) ? "none" : "";
+		document.querySelector("#mapSizeHR").style.display = (mapScale != 1) ? "none" : "";
+		document.querySelector("#demoWarning").style.display = (mapScale != 1) ? "none" : "";
 		
 		for (let i = 0;i < availableMapScales.length;i++) {
 			if (i == mapScale) {
@@ -93,7 +93,7 @@ document.querySelector("#largeSize").addEventListener("click", () => {
 
 
 document.querySelector("#startGame").addEventListener("click", () => {
-	if (mapScale == 2) {
+	if ((mapScale == 0) || (mapScale == 2)) {
 		document.querySelector("#errorLoading").showModal();
 		return;
 	}
